@@ -1,0 +1,65 @@
+{% extends "basemain.html" %}
+{% block title %} View Braille -- {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">View Braille</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="basic-datatables" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th> File ID</th>
+                                                <th>Title</th>
+                                                <th>Date Uploaded</th>
+                                                <th>View</th>
+                                                <th>Actions</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th> File ID</th>
+                                                <th>Title</th>
+                                                <th>Date Uploaded</th>
+                                                <th>View</th>
+                                                <th>Actions</th>
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                           {% for bf in braille_infos%}
+                                            <tr>
+                                                <td>{{bf.id}}</td>
+                                                <td>{{bf.title}}</td>
+                                                <td>{{bf.date_saved}}</td>
+
+                                                <td>
+                                                    <form method="post">
+                                                        {%csrf_token%}
+                                                        <input type="text" name="filename" value={{bf.filename}} style="display: none;">
+                                                        <button type="submit" value="view_braille" name="form_type" class="btn btn-round btn-sm btn-primary"> <i class="fa fa-eye" aria-hidden="true"></i></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-round btn-sm btn-secondary"> <i class="fa fa-edit" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                            {%endfor%}
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endblock %}

@@ -1,0 +1,264 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>{% block title %}{% endblock %} - Braille Management System</title>
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+
+    <!-- Fonts and icons -->
+    <script src="static/main/assets/js/plugin/webfont/webfont.min.js"></script>
+    <link rel="stylesheet" href="static/main/assets/css/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script>
+        WebFont.load({
+            google: {
+                "families": ["Public Sans:300,400,500,600,700"]
+            },
+            custom: {
+                "families": ["simple-line-icons"],
+                urls: ['static/main/assets/css/fonts.min.css']
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="static/main/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/main/assets/css/plugins.min.css">
+    <link rel="stylesheet" href="static/main/assets/css/kaiadmin.min.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+
+                    <a href="{% url 'dashboard' %}" class="logo">
+                        <img src="#" alt="navbar brand" class="navbar-brand" height="20">
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="{% url 'dashboard' %}">
+                                <i class="fa fa-home" aria-hidden="true"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'tutorial' %}">
+                                <i class="fa fa-book" aria-hidden="true"></i>
+                                <p>Tutorial</p>
+                            </a>
+                        </li>
+                        <li class="nav-section">
+                            <span class="sidebar-mini-icon">
+                                <i class="fa fa-ellipsis-h"></i>
+                            </span>
+                            <h4 class="text-section">Actions</h4>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'shared' %}">
+                                <i class="fa fa-users"></i>
+                                <p>Manage Accounts</p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="{% url 'create_braille' %}">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <p>Create Braille</p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'view_braille' %}">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                <p>View Braille Files</p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'archives' %}">
+                                <i class="fa fa-archive"></i>
+                                <p>Archives</p>
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item mb-3">
+                            <a href="{% url 'report' %}">
+                                <i class="fas fa-flag"></i>
+                                <p>Report Update</p>
+                            </a>
+                        </li> -->
+                        
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'shared' %}">
+                                <i class="fa fa-users"></i>
+                                <p>Shared to me</p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'account_settings' %}">
+                                <i class="fa fa-cogs" aria-hidden="true"></i>
+                                <p>Account Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-3">
+                            <a href="{% url 'logout_user' %}">
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                                <p>Logout</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <!-- Logo Header -->
+                    <div class="logo-header" data-background-color="dark">
+
+                        <a href="index.html" class="logo">
+                            <img src="static/main/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand"
+                                height="20">
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+
+                    </div>
+                    <!-- End Logo Header -->
+                </div>
+                <!-- Navbar Header -->
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+
+                    <div class="container-fluid">
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+
+                            <li class="nav-item topbar-user dropdown hidden-caret">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
+                                    aria-expanded="false">
+
+                                    <span class="profile-username">
+                                        {% if user.is_authenticated %}
+                                        <span class="op-7">Welcome Back,</span> <span class="fw-bold">{{user.username}}</span> !
+                                        {%endif%}
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'account_settings' %}">Account Setting</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- End Navbar -->
+            </div>
+
+
+            {% block content %}{% endblock %}
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="copyright ms-auto">
+                        All Rights Reserved 2024</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+    </div>
+      <!-- Core JS Files   -->
+    <script src="static/main/assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="static/main/assets/js/core/popper.min.js"></script>
+    <script src="static/main/assets/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="static/main/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS
+    <script src="static/main/assets/js/plugin/chart.js/chart.min.js"></script> -->
+
+    <!-- jQuery Sparkline -->
+    <script src="static/main/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="static/main/assets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="static/main/assets/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <!-- <script src="static/main/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
+
+    <!-- jQuery Vector Maps -->
+    <script src="static/main/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="static/main/assets/js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="static/main/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="static/main/assets/js/kaiadmin.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+
+
+
+    {% for message in messages %}
+
+    <script>
+        Swal.fire({
+        position: 'center',
+        icon: '{{message.tags}}',
+        title: '{{message}}\n',
+        showConfirmButton: true,
+        confirmButtonColor: '#3248a8',
+        
+        })
+    </script>
+    {% endfor %}
+
+</body>
+
+
+
+</html>

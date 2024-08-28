@@ -1,0 +1,133 @@
+{% extends "basemain.html" %}
+{% block title %} Tutorial -- {% endblock %}
+
+{% block content %}
+
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-round">
+                                <div class="card-header">
+                                    
+                                    <div class="card-head-row card-tools-still-right">
+                                        <div class="card-title">Braille Quick Tutorial</div>
+                                    </div>
+                                    <div class="container">
+                                        <p>Note: This may appear offline if the device has no internet connection</p>
+                                    </div>
+                                </div>
+                                <div class="card-body p-1">
+                                    <center>
+                                        <iframe width="80%" height="500" src="https://www.youtube.com/embed/LIZ0qtckQh8?si=Br5Y1phV4MMNCent" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-round">
+                                <div class="card-header">
+                                    <div class="card-head-row card-tools-still-right">
+                                        <div class="card-title">Explore Braille by Clicking these buttons!</div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-1">
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <div class="container">
+                                                        <h5>Alphabets</h5>
+                                                        <div class="container mb-1">
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">A</button> 
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">B</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">C</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">D</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">E</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">F</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">G</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">H</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">I</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">J</button>
+                                                        </div>
+                                                        <div class="container mb-1">
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">K</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">L</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">M</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">N</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">O</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">P</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">Q</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">R</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">S</button>
+
+                                                        </div>
+                                                        
+                                                        <div class="container mb-4">
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">T</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">U</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">V</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">W</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">X</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">Y</button>
+                                                            <button type="button" class="btn btn-primary btn-sm" onclick="convertToBraille(this.innerText)">Z</button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="container">
+                                                        <h5>Numbers</h5>
+                                                        <div class="container mb-1">
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">0</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">1</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">2</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">3</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">4</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">5</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">6</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">7</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">8</button>
+                                                            <button type="button" class="btn btn-primary btn-sm " onclick="convertToBraille(this.innerText)">9</button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <center>
+                                                        <h3>Equivalent to Braille</h3>
+                                                        <text id="outputText" style="font-size:105px;"></text>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <script>
+                const brailleDict = {
+                   'a': 'A - ⠁', 'b': 'B - ⠃', 'c': 'C - ⠉', 'd': 'D - ⠙', 'e': 'E - ⠑', 'f': 'F - ⠋', 'g': 'G - ⠛',
+                   'h': 'H - ⠓', 'i': 'I - ⠊', 'j': 'J - ⠚', 'k': 'K - ⠅', 'l': 'L - ⠇', 'm': 'M - ⠍', 'n': 'N - ⠝',
+                   'o': 'O - ⠕', 'p': 'P - ⠏', 'q': 'Q - ⠟', 'r': 'R - ⠗', 's': 'S - ⠎', 't': 'T - ⠞', 'u': 'U - ⠥',
+                   'v': 'V - ⠧', 'w': 'W - ⠺', 'x': 'X - ⠭', 'y': 'Y - ⠽', 'z': 'Z - ⠵',
+                   '0': '0 - ⠴', '1': '1 - ⠂', '2': '2 - ⠆', '3': '3 - ⠒', '4': '4 - ⠲', '5': '5 - ⠢', '6': '6 - ⠖', '7': '7 - ⠶', '8': '8 - ⠦', '9': '9 - ⠔'
+                 };
+         
+                 function convertToBraille(character) {
+                   if (brailleDict.hasOwnProperty(character.toLowerCase())) {
+                     document.getElementById('outputText').innerText = brailleDict[character.toLowerCase()];
+                   } else {
+                     document.getElementById('outputText').innerText = "Not a valid character";
+                   }
+                 }
+         
+                
+             </script>
+            {% endblock %}

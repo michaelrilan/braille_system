@@ -1,0 +1,64 @@
+{% extends "basemain.html" %}
+{% block title %} Shared to me -- {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Shared to me</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="basic-datatables" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>File ID</th>
+                                                <th>Title</th>
+                                                <th>Shared by</th>
+                                                <th>Date shared</th>
+                                                <th>View</th>
+                                                <th>Actions</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>File ID</th>
+                                                <th>Title</th>
+                                                <th>Shared by</th>
+                                                <th>Date shared</th>
+                                                <th>View</th>
+                                                <th>Actions</th>
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                           
+                                            <tr>
+                                                <td>Lael Greer</td>
+                                                <td>Systems Administrator</td>
+                                                <td>London</td>
+                                                <td>21</td>
+                                                <td>2009/02/27</td>
+                                                <td>2009/02/27</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jonas Alexander</td>
+                                                <td>Developer</td>
+                                                <td>San Francisco</td>
+                                                <td>30</td>
+                                                <td>20</td>
+                                                <td>2009/02/27</td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}

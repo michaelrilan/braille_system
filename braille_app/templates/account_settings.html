@@ -1,0 +1,44 @@
+{% extends "basemain.html" %}
+{% block title %} Dashboard -- {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    
+
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Change Password</div>
+                            </div>
+                            <div class="card-body">
+                            
+                                <form method="POST">
+                                    {%csrf_token%}
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            
+                                            <label for="password1">Current Password</label>
+                                            <input type="password" class="form-control" name="old_password" placeholder="Enter Current Password" />
+
+                                            <label for="pasword2">New Password</label>
+                                            <input type="password" class="form-control" name="new_password1" placeholder="Enter New Password" />
+
+                                            <label for="pasword2">Confirm New Password</label>
+                                            <input type="password" class="form-control" name="new_password2" placeholder="Confirm New Password" />
+                                        
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-action">
+                                        <button class="btn btn-primary mr-4">Submit</button>
+                                        <button class="btn btn-danger mr-4">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endblock %}
