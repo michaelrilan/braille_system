@@ -1,0 +1,13 @@
+django==5.0
+gingerit
+cloudscraper
+python-docx
+mysqlclient
+language-tool-python
+setuptools
+autocorrect
+pyspellchecker
+torch 
+gramformer
+happytransformer
+textblob

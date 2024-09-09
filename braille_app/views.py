@@ -33,6 +33,8 @@ brailleDict = {
   '?': '⠦', 
   "'": '⠄' 
 }
+
+
 def convert_to_braille(text):
     return ''.join(brailleDict.get(char, char) for char in text)
 

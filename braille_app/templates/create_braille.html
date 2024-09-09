@@ -10,64 +10,42 @@
                                 <div class="card-title">Create Braille</div>
                             </div>
                             <div class="card-body">
-                                    <div class="form-group">
-                                        <label>Select Method</label><br />
-                                        <div class="d-flex">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="type_content_option" checked />
-                                                <label class="form-check-label" for="type_content_option"> Type Content </label>
-                                            </div>
-                                            <div class="form-check" style="display: none;">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="upload_file_option" />
-                                                <label class="form-check-label" for="upload_file_option">
-                                                    Upload File
-                                                </label>
-                                            </div>
+                                <form action="" id="speech_to_text">
                                     
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="speech_to_text_option" />
-                                                <label class="form-check-label" for="speech_to_text_option">
-                                                    Speech to Text
-                                                </label>
-                                            </div>
+                                  
+                                    
+                                    <div class="form-group">
+                                        <label for="title">Title:</label>
+                                        <input type="text" class="form-control mb-4" name="title" placeholder="Enter Title" required />
+                                        <div class="col">
+                                            <label for="comment">Type Content or use the Text to Speech below: </label>
+                                            <div class="speaker" style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
+                                                <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
+                                                <button onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
+                                                    <i class="fa fa-microphone" aria-hidden="true"></i> Speak
+                                                </button>
+                                             </div>
                                         </div>
-                                    </div>
-                                <form action="" method="POST" id="type_content">
-                                    {%csrf_token%}
-                                    <div class="form-group">
-
-                                        <label for="title">Title:</label>
-                                        <input type="text" class="form-control mb-4" name="title" placeholder="Enter Title" required />
-
-                                        <label for="comment">Braille Draft(250 characters only):</label>
-                                        <a href="#">AI Grammar Checker</a>
-                                        <textarea class="form-control" minlength="0" name="braille_draft" maxlength="250" placeholder="Type Something..." id="comment"
-                                            rows="5" required> </textarea>
-                                    </div>
-                                      <div class="card-action">
-                                        <button class="btn btn-primary mr-4" name="form_type" value="type_content">Submit</button>
-                                        <button class="btn btn-danger mr-4">Cancel</button>
-                                      </div>
-                                </form>
-
-                                <form action="" id="speech_to_text" style="display: none;">
-                                    
-                                   <a href="#">AI Grammar Checker</a>
-                                    
-                                    <div class="form-group">
-                                        <label for="title">Title:</label>
-                                        <input type="text" class="form-control mb-4" name="title" placeholder="Enter Title" required />
-                                        <label for="comment">For the Content, Please click the Microphone Button and Speak</label>
-                                        <button id="speak">
-                                            <i class="fa fa-microphone" aria-hidden="true"></i> Please click the microphone.
-                                        </button>
+                                        
+                                        
                                     </div>
 
-                                    <textarea class="form-control" minlength="0" maxlength="250" placeholder="Type Something..." id="comment"
+                                    <textarea class="form-control" minlength="0" maxlength="250" placeholder="Type Something..." id="content"
                                             rows="5"> </textarea>
+                                            <div class="row">
+                                                
+                                                <div class="col-8">
+                                                    
+                                                </div>
+                                              
+                                                </div>
+                                            </div>
+                                            
+                                       
                                       <div class="card-action">
-                                        <button class="btn btn-primary mr-4">Submit</button>
-                                        <button class="btn btn-danger mr-4">Cancel</button>
+                                        <button type="submit" class="btn btn-info mr-4">Grammar Checker</button>
+                                        <button type="submit" class="btn btn-primary mr-4">Submit</button>
+                                        <!-- <button class="btn btn-danger mr-4">Cancel</button> -->
                                       </div>
                                 </form>
 
@@ -77,29 +55,26 @@
                 </div>
             </div>
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const typeContentOption = document.getElementById('type_content_option');
-                    const speechFileOption = document.getElementById('speech_to_text_option');
-                    
-                    const typeContentForm = document.getElementById('type_content');
-                    const uploadFileForm = document.getElementById('upload_file');
-                    const speechFileForm = document.getElementById('speech_to_text');
-            
-                    typeContentOption.addEventListener('change', toggleForms);
+                runSpeechRecog = () => {
+                   var txt_content = document.getElementById("content");
+                   txt_content.innerHTML = "Loading text...";
+                   txt_content.readOnly = true;
+                   
+                   var output = document.getElementById('content');
+                   var action = document.getElementById('action');
+                   let recognization = new webkitSpeechRecognition();
+                   recognization.onstart = () => {
+                      action.innerHTML = "Listening...";
+                   }
+                   recognization.onresult = (e) => {
+                      var transcript = e.results[0][0].transcript;
+                      output.innerHTML = transcript;
+                      output.classList.remove("hide")
+                      action.innerHTML = "";
+                      txt_content.readOnly = false;
 
-                    speechFileOption.addEventListener('change', toggleForms);
-            
-                    function toggleForms() {
-                        if (typeContentOption.checked) {
-                            typeContentForm.style.display = 'block';
-                            speechFileForm.style.display = 'none';
-        
-                        }
-                        else if (speechFileOption.checked) {
-                            typeContentForm.style.display = 'none';
-                            speechFileForm.style.display = 'block';
-                        }
-                    }
-                });
-            </script>
+                   }
+                   recognization.start();
+                }
+             </script>
             {% endblock %}
