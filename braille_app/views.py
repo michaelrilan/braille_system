@@ -236,7 +236,7 @@ def view_braille(request):
                     os.makedirs(documents_dir)
 
                 return redirect('download_braille', file_name= filename) 
-        braille_infos = BrailleInfo.objects.filter(user_id=user_id)
+        braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
         context = {'braille_infos': braille_infos}
     else: 
         return redirect('login')

@@ -17,7 +17,7 @@
                                                 <th> File ID</th>
                                                 <th>Title</th>
                                                 <th>Date Uploaded</th>
-                                                <th>View</th>
+                                                <th>Download</th>
                                                 <th>Actions</th>
                                                 
                                             </tr>
@@ -27,7 +27,7 @@
                                                 <th> File ID</th>
                                                 <th>Title</th>
                                                 <th>Date Uploaded</th>
-                                                <th>View</th>
+                                                <th>Download</th>
                                                 <th>Actions</th>
                                                 
                                             </tr>
@@ -40,15 +40,69 @@
                                                 <td>{{bf.date_saved}}</td>
 
                                                 <td>
-                                                    <form method="post">
+                                                    <form method="post" name="download_braille">
                                                         {%csrf_token%}
                                                         <input type="text" name="filename" value={{bf.filename}} style="display: none;">
-                                                        <button type="submit" value="view_braille" name="form_type" class="btn btn-round btn-sm btn-primary"> <i class="fa fa-eye" aria-hidden="true"></i></button>
+                                                        <button type="submit" value="view_braille" name="form_type" class="btn btn-round btn-sm btn-primary"> <i class="fa fa-download" aria-hidden="true"></i></button>
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-round btn-sm btn-secondary"> <i class="fa fa-edit" aria-hidden="true"></i></button>
-                                                    <button class="btn btn-round btn-sm btn-danger"> <i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"> <i class="fa fa-edit" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-danger"><i class="fa fa-archive" aria-hidden="true"></i></button>
+                                                    
+                                                    
+                                                    <!-- Edit Modal -->
+                                                    <div class="modal fade" id="edit{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Edit Braille</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="post" name="edit_braille">
+                                                                    {%csrf_token%}
+                                                                    <div class="form-group">
+                                                                        <label for="comment">Title</label>
+                                                                        <input type="text" name="title" value="{{ bf.title }}">
+                                                                    </div>
+                                                                      <div class="form-group">
+                                                                        <label for="comment">Content:</label>
+                                                                        <textarea name="braille_draft" class="form-control" minlength="0" maxlength="250"
+                                                                            placeholder="Type Something..." id="content" rows="5" required>{{ bf.braille_draft }}</textarea>
+                                                                      </div> 
+                                                                        
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Archive Modal -->
+                                                    <div class="modal fade" id="archive{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Edit Braille</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                            <input type="text" name="" id="" value="{{ bf.id }}">
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+
+
                                                 </td>
                                             </tr>
                                             {%endfor%}
@@ -62,4 +116,7 @@
                 </div>
             </div>
 
+
+  
+  
             {% endblock %}
