@@ -60,6 +60,7 @@ def check_text(text):
     
     return(corrected_text)
 
+
 @csrf_exempt
 def grammar_check(request):
     if request.method == 'POST':
@@ -188,7 +189,7 @@ def create_braille(request):
                 messages.error(request, 'Invalid content!')
                 return redirect('create_braille')
             else:
-                filename = f'{request.user.id}_{title}_{current_date}.docx'
+                filename = f'{request.user.id}_{title.replace(" ", "_")}_{current_date}.docx'
                 braille_text = convert_to_braille(braille_draft)
                 braille_instance = BrailleInfo.objects.create(
                         user=request.user,
@@ -224,13 +225,17 @@ def create_braille(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def view_braille(request):
+    current_date = datetime.now().strftime('%Y%m%d_%H%M%S')  # Format the date as YYYYMMDD
     user_id = request.user.id
     if request.user.is_authenticated:
         if request.method == 'POST':
             form_type = request.POST.get('form_type')
 
 
+
+            # DOWNLOAD BRAILLE FUNCTION
             if form_type == 'download_braille':
+                print('download')
                 braille_id = request.POST.get('braille_id')
                 filename = request.POST.get('filename')
                 documents_dir = 'static/documents'
@@ -258,6 +263,37 @@ def view_braille(request):
                     return redirect('download_braille', file_name= filename) 
                 except Exception as e:
                     print(f"Error during download redirection: {e}")
+
+
+            # EDIT BRAILLE FUNCTION
+            elif form_type == 'edit_braille':
+                braille_id = request.POST.get('braille_id')
+                braille_draft = request.POST.get('braille_draft')
+                braille_text = convert_to_braille(braille_draft)
+                title = request.POST.get('title')
+                braille_info = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+                document = Document()
+                document.add_heading(title, level=1)
+                document.add_paragraph(braille_text)
+                document.add_paragraph(braille_draft)
+                filename = f'{user_id}_{title.replace(" ", "_")}_{current_date}.docx'
+                file_path = os.path.join('static/documents', filename)
+                document.save(file_path)
+
+                braille_info.filename = filename
+                braille_info.braille_draft = braille_draft
+                braille_info.braille_text = braille_text
+                braille_info.title = title
+                
+                braille_info.save()
+
+                created_id = braille_info.id
+                activity_history = ActivityHistory(user_id = user_id,activity_log="Updated Braille File(File # " +str(created_id) + ")")
+                activity_history.save()
+                messages.success(request, 'Braille Information Updated')
+                return redirect('view_braille')
+
+
 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
         context = {'braille_infos': braille_infos}

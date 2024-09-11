@@ -30,7 +30,7 @@ class BrailleInfo(models.Model):
 class ActivityHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_log = models.CharField(max_length=255)
-    date_log = models.DateTimeField(auto_now_add=True)
+    date_log = models.DateField(auto_now_add=True)
     class Meta:
         db_table = 'ActivityHistory'
 
