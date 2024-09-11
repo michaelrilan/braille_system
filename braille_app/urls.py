@@ -14,5 +14,6 @@ urlpatterns = [
     path("report", views.report, name="report"),
     path("shared", views.shared, name="shared"),
     path("account_settings", views.account_settings, name="account_settings"),
-    path("logout_user", views.logout_user, name="logout_user")
+    path("logout_user", views.logout_user, name="logout_user"),
+    path('grammar_check/',views.grammar_check, name='grammar_check'),
 ]

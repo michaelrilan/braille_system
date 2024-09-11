@@ -10,7 +10,11 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import os
 from datetime import datetime
-
+from happytransformer import HappyTextToText
+from happytransformer import TTSettings
+from textblob import TextBlob
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # Get the current date
 
 # Create your views here.
@@ -35,12 +39,46 @@ brailleDict = {
 }
 
 
+
 def convert_to_braille(text):
     return ''.join(brailleDict.get(char, char) for char in text)
 
 def uppercase(data):
     return str(data).upper()
 
+
+def check_text(text):
+    # Create a TextBlob object
+    blob = TextBlob(text)
+    
+    # Correct spelling
+    corrected_text = blob.correct()
+    
+    # Print the original and corrected text
+    print("Original Text:", text)
+    print("Corrected Text:", corrected_text)
+    
+    return(corrected_text)
+
+@csrf_exempt
+def grammar_check(request):
+    if request.method == 'POST':
+        data = request.POST.get('text', '')
+        if not data:
+            return JsonResponse({'error': 'No text provided'}, status=400)
+        
+        text = check_text(data)
+        happy_tt = HappyTextToText("T5",  "prithivida/grammar_error_correcter_v1")
+        settings = TTSettings(do_sample=True, top_k=10, temperature=0.5,  min_length=1, max_length=100)
+
+        text = "gec: " + str(text)
+        
+
+        result = happy_tt.generate_text(text, args=settings)
+        print('grammar_check: ' + str(result.text))
+        
+        return JsonResponse({'corrected_text': result.text})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
 
@@ -56,8 +94,6 @@ def user_login(request):
         else:
             messages.error(request, "Invalid Credentials!")
     return render(request, 'login.html')
-
-
 
 
 
@@ -145,11 +181,13 @@ def create_braille(request):
     current_date = datetime.now().strftime('%Y%m%d_%H%M%S')  # Format the date as YYYYMMDD
     if request.user.is_authenticated:
        if request.method == 'POST':
-           form_type = request.POST.get('form_type')
-           if form_type == 'type_content':
-                title = request.POST.get('title')
-                user_id = request.user.id
-                braille_draft = request.POST.get('braille_draft')
+            title = request.POST.get('title')
+            user_id = request.user.id
+            braille_draft = request.POST.get('braille_draft')
+            if (braille_draft.strip() == '' or title.strip() == ''):
+                messages.error(request, 'Invalid content!')
+                return redirect('create_braille')
+            else:
                 filename = f'{request.user.id}_{title}_{current_date}.docx'
                 braille_text = convert_to_braille(braille_draft)
                 braille_instance = BrailleInfo.objects.create(
@@ -161,24 +199,24 @@ def create_braille(request):
                     )
                 created_id = braille_instance.id
                 # Ensure the directory exists
-                documents_dir = 'static/documents'
-                if not os.path.exists(documents_dir):
-                    os.makedirs(documents_dir)
+                # documents_dir = 'static/documents'
+                # if not os.path.exists(documents_dir):
+                #     os.makedirs(documents_dir)
 
-                document = Document()
-                document.add_heading(title, level=1)
-                document.add_paragraph(braille_text)
-                document.add_paragraph(braille_draft)
+                # document = Document()
+                # document.add_heading(title, level=1)
+                # document.add_paragraph(braille_text)
+                # document.add_paragraph(braille_draft)
 
-                file_path = os.path.join('static/documents', filename)
-                document.save(file_path)
+                # file_path = os.path.join('static/documents', filename)
+                # document.save(file_path)
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
-                return redirect('download_braille', file_name= filename)
+                messages.success(request, 'Braille Successfully Created!')
+                # return redirect('download_braille', file_name= filename)
+                return redirect('create_braille')
        
     return render(request, 'create_braille.html')
-
-
 
 
 
@@ -205,7 +243,6 @@ def view_braille(request):
     return render(request, 'view_braille.html',context)
 
 
-
 @login_required(login_url='login')
 def download_braille(request, file_name):
     file_path = os.path.join('static/documents', file_name)
@@ -213,6 +250,8 @@ def download_braille(request, file_name):
         response = HttpResponse(doc_file.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
         response['Content-Disposition'] = f'attachment; filename={file_name}'
         return response
+
+
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
