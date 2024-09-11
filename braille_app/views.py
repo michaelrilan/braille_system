@@ -199,17 +199,17 @@ def create_braille(request):
                     )
                 created_id = braille_instance.id
                 # Ensure the directory exists
-                # documents_dir = 'static/documents'
-                # if not os.path.exists(documents_dir):
-                #     os.makedirs(documents_dir)
+                documents_dir = 'static/documents'
+                if not os.path.exists(documents_dir):
+                    os.makedirs(documents_dir)
 
-                # document = Document()
-                # document.add_heading(title, level=1)
-                # document.add_paragraph(braille_text)
-                # document.add_paragraph(braille_draft)
+                document = Document()
+                document.add_heading(title, level=1)
+                document.add_paragraph(braille_text)
+                document.add_paragraph(braille_draft)
 
-                # file_path = os.path.join('static/documents', filename)
-                # document.save(file_path)
+                file_path = os.path.join('static/documents', filename)
+                document.save(file_path)
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
                 messages.success(request, 'Braille Successfully Created!')
@@ -228,14 +228,37 @@ def view_braille(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form_type = request.POST.get('form_type')
-            if form_type == 'view_braille':
+
+
+            if form_type == 'download_braille':
+                braille_id = request.POST.get('braille_id')
                 filename = request.POST.get('filename')
                 documents_dir = 'static/documents'
+                fetch_braille = BrailleInfo.objects.get(id=braille_id,deleteflag = False)
+                title = fetch_braille.title
+                braille_text = fetch_braille.braille_text
+                braille_draft = fetch_braille.braille_draft
 
                 if not os.path.exists(documents_dir):
                     os.makedirs(documents_dir)
+                file_path = os.path.join(documents_dir, filename)
+                # Check if the file exists, if not, recreate it
+                if not os.path.exists(file_path):
+                    try:
+                        # Create and save the document
+                        document = Document()
+                        document.add_heading(title, level=1)
+                        document.add_paragraph(braille_text)
+                        document.add_paragraph(braille_draft)
+                        document.save(file_path)
+                    except Exception as e:
+                        print(f"Error creating document: {e}")
+                
+                try:
+                    return redirect('download_braille', file_name= filename) 
+                except Exception as e:
+                    print(f"Error during download redirection: {e}")
 
-                return redirect('download_braille', file_name= filename) 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
         context = {'braille_infos': braille_infos}
     else: 
