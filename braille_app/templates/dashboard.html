@@ -11,6 +11,7 @@
                             <h6 class="op-7 mb-2">Braille System</h6>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-sm-6 col-md-3">
                             <div class="card card-stats card-round">
@@ -79,16 +80,22 @@
 
                                     </div>
                                 </div>
-                                <div class="card-body p-0">
+                                <div class="card-body pt-2">
                                     <div class="table-responsive">
-                                        <!-- Projects table -->
-                                        <table class="table align-items-center mb-0">
-                                            <thead class="thead-light">
+                                        <!-- class="table align-items-center mb-0" -->
+                                        <table id="basic-datatables" class="display table table-striped table-hover">
+                                            <thead>
                                                 <tr>
                                                     <th scope="col">Activity Log</th>
                                                     <th scope="col" class="text-end">Date</th>
                                                 </tr>
                                             </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th scope="col">Activity Log</th>
+                                                    <th scope="col" class="text-end">Date</th>
+                                                </tr>
+                                            </tfoot>
                                             <tbody>
                                                 {%for ah in activity_history%}
                                                 <tr>
@@ -112,4 +119,5 @@
                     </div>
                 </div>
             </div>
+           
             {% endblock %}

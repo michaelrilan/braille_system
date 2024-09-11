@@ -230,6 +230,7 @@
     <script src="static/main/assets/js/plugin/chart-circle/circles.min.js"></script>
 
     <!-- Datatables -->
+
     <script src="static/main/assets/js/plugin/datatables/datatables.min.js"></script>
 
     <!-- Bootstrap Notify -->
@@ -248,7 +249,11 @@
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
 
-
+    <script>
+        $(document).ready(function() {
+            $("#basic-datatables").DataTable({});
+        });
+    </script>
 
     {% for message in messages %}
 
