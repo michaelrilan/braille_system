@@ -284,7 +284,6 @@ def view_braille(request):
                 braille_info.braille_draft = braille_draft
                 braille_info.braille_text = braille_text
                 braille_info.title = title
-                
                 braille_info.save()
 
                 created_id = braille_info.id
@@ -293,8 +292,14 @@ def view_braille(request):
                 messages.success(request, 'Braille Information Updated')
                 return redirect('view_braille')
 
-
-
+            elif form_type == 'archive_braille':
+                braille_id = request.POST.get('braille_id')
+                braille_info = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+                braille_info.deleteflag = True
+                braille_info.save()
+                messages.success(request, 'Braille Successfully moved to Archive')
+                return redirect('view_braille')
+                
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
         context = {'braille_infos': braille_infos}
     else: 
