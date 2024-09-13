@@ -2,164 +2,108 @@
 {% block title %} Manage Account -- {% endblock %}
 
 {% block content %}
-            {%if succ%}
-            <div class="container">
-                <div class="page-inner">
-                    <div class="container pb-3">
-                        <div class="row">
-                            <div class="col-10">
-                                <button class="btn btn-round btn-md btn-danger"><i class="fa fa-arrow-left" aria-hidden="true"></i>  Back</button>
-                            </div>
-                            <div class="col">
-                            
-                            </div>
-                        </div>
+    <div class="container">
+        <div class="page-inner">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Manage Accounts</div>
                     </div>
-                    <div class="row">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title"> <h2>User Account Added Successfully!</h2></div>
-                                <p>Please see  below for the User Information</p>
-                            </div>
-                            <div class="card-body">
-                                
-                                
-                                <div class="table-responsive">
-                                    
-                                    <table id="basic-datatables" class="display table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>User ID</th>
-                                                <th>Firstname</th>
-                                                <th>Lastname</th>
-                                                <th>Username</th>
-                                                <th>Initial Password</th>
-                                    
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>User ID</th>
-                                                <th>Firstname</th>
-                                                <th>Lastname</th>
-                                                <th>Username</th>
-                                                <th>Initial Password</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-                                            <tr>
-                                                <td>Teacher</td>
-                                                <td>Michael Angelo</td>
-                                                <td>Rilan</td>
-                                                <td>micorilan</td>
-                                                <td>#J42RmWgQC4</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                    <div class="card-body">
+                        <div class="container pb-3">
+                            <div class="row">
+                                <div class="col-10">
                                 </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            {%else%}
-                <div class="container">
-                    <div class="page-inner">
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="card-title">Manage Accounts</div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container pb-3">
-                                        <div class="row">
-                                            <div class="col-10">
+                                <div class="col">
+                                    <button class="btn btn-round btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#addaccount"><i class="fa fa-plus" aria-hidden="true"></i>Add Account</button>
+                                    <!-- Add Account Modal -->
+                                    <div class="modal fade" id="addaccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <div class="col">
-                                                <button class="btn btn-round btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#addaccount"><i class="fa fa-plus" aria-hidden="true"></i>Add Account</button>
-                                                <!-- Add Account Modal -->
-                                                <div class="modal fade" id="addaccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                                            <form method="post" name="restore_braille">
+                                                {%csrf_token%}
+                                                <div class="modal-body">
+                                                        <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
+                                                        <div class="mb-3">
+                                                            <label for="exampleFormControlInput1" class="form-label">First Name</label>
+                                                            <input type="text" name="firstname" value="{{first_name}}" class="form-control" onkeyup="lettersOnly(this)" required> 
                                                         </div>
-
-                                                        <form method="post" name="restore_braille">
-                                                            {%csrf_token%}
-                                                            <div class="modal-body">
-                                                                    <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
-                                                                    <div class="mb-3">
-                                                                        <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                                                                        <input type="text" class="form-control" id="exampleFormControlInput1">
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                                                                        <input type="text" class="form-control" id="exampleFormControlInput1">
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label for="exampleFormControlInput1" class="form-label">Email</label>
-                                                                        <input type="email" class="form-control" id="exampleFormControlInput1">
-                                                                    </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" name="form_type" value="restore_braille" class="btn btn-primary">Submit</button>
-                                                            </div>
-                                                        </form>
-
-                                                    </div>
-                                                    </div>
+                                                        <div class="mb-3">
+                                                            <label for="exampleFormControlInput1" class="form-label">Last Name</label>
+                                                            <input type="text" name="lastname" class="form-control" value="{{last_name}}" onkeyup="lettersOnly(this)" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                                            <input type="email" name="email" value="{{email}}" class="form-control" required>
+                                                        </div>
                                                 </div>
-                                            </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" name="form_type" value="add_account" class="btn btn-primary">Submit</button>
+                                                </div>
+                                            </form>
+
+                                        </div>
                                         </div>
                                     </div>
-                                    
-                                    <div class="table-responsive">
-                                        
-                                        <table id="basic-datatables" class="display table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>User ID</th>
-                                                    <th>Firstname</th>
-                                                    <th>Lastname</th>
-                                                    <th>Username</th>
-                                                    <th>Initial Password</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>User ID</th>
-                                                    <th>Firstname</th>
-                                                    <th>Lastname</th>
-                                                    <th>Username</th>
-                                                    <th>Initial Password</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </tfoot>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Teacher</td>
-                                                    <td>Michael Angelo</td>
-                                                    <td>Rilan</td>
-                                                    <td>micorilan</td>
-                                                    <td>#J42RmWgQC4</td>
-                                                    <td>
-                                                        <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
-                                                        <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
                                 </div>
                             </div>
-
+                        </div>
+                        
+                        <div class="table-responsive">
+                            
+                            <table id="basic-datatables" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Username</th>
+                                        <th>Initial Password</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Username</th>
+                                        <th>Initial Password</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <tr>
+                                        <td>Teacher</td>
+                                        <td>Michael Angelo</td>
+                                        <td>Rilan</td>
+                                        <td>micorilan</td>
+                                        <td>#J42RmWgQC4</td>
+                                        <td>
+                                            <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                            <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            {%endif%}
-            {% endblock %}
+
+            </div>
+        </div>
+    </div>
+    <script>
+          // REGEX
+        function lettersOnly(input) {
+            var regex = /[^a-z ]/gi;
+            input.value = input.value.replace(regex, "");
+        }
+    </script>
+{% endblock %}

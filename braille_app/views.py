@@ -424,9 +424,47 @@ def archives(request):
 def manage_account(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            pass
-    context = {"scc":False}
-    return render(request, 'manage_account.html',context)
+            form_type = request.POST.get('form_type')
+            if form_type == 'add_account':
+                fname = request.POST.get('firstname')
+                lname = request.POST.get('lastname')
+                email = request.POST.get('email')
+                usernames = list(User.objects.values_list('username', flat=True))
+                username = generate_unique_username(fname,lname,usernames)
+                pw = generate_random_string()
+                email_check =  User.objects.filter(email = email).count()
+                fname_check =  User.objects.filter(first_name = fname,last_name = lname).count()
+                if email_check > 0:
+                    messages.error(request,'Email Already Exists')
+                elif fname_check>0:
+                    messages.error(request,'Your Fullname Already Exists')
+                else:
+                    try:
+                        validate_password(pw)
+                        user = User.objects.create_user(username=username, email=email, password=pw, first_name=fname, last_name=lname)
+                        user.save()
+
+                        fullname = fname + ' ' + lname
+                        context = {
+                            'fullname': fullname,
+                            'username': username,
+                            'initial_password': pw
+                        }
+                        message_data = json.dumps(context)
+                        messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
+                        return redirect('manage_account')
+                    except ValidationError as e:
+                        # Handle the validation error (e.g., log it, display a message)
+                        messages.error(request, f'Invalid: {", ".join(e.messages)}')
+
+                context = {
+                    'first_name': fname,
+                    'last_name': lname,
+                    'email': email
+                }
+                # return redirect('manage_account')
+                return render(request, "manage_account.html", context)
+    return render(request, 'manage_account.html')
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
