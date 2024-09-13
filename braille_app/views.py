@@ -464,15 +464,21 @@ def manage_account(request):
                     except ValidationError as e:
                         # Handle the validation error (e.g., log it, display a message)
                         messages.error(request, f'Invalid: {", ".join(e.messages)}')
-
+                profiles = UserProfile.objects.select_related('user').filter(deleteflag=False)
                 context = {
+                    'profiles':profiles,
                     'first_name': fname,
                     'last_name': lname,
                     'email': email
                 }
+
                 # return redirect('manage_account')
                 return render(request, "manage_account.html", context)
-    return render(request, 'manage_account.html')
+    profiles = UserProfile.objects.select_related('user').filter(deleteflag=False)
+    context = {
+        'profiles':profiles
+        }
+    return render(request, 'manage_account.html',context)
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

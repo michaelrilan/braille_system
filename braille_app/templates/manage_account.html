@@ -79,17 +79,19 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
+                                    {% for profile in profiles %}
                                     <tr>
-                                        <td>Teacher</td>
-                                        <td>Michael Angelo</td>
-                                        <td>Rilan</td>
-                                        <td>micorilan</td>
-                                        <td>#J42RmWgQC4</td>
+                                        <td>{{ profile.user.id }}</td>
+                                        <td>{{ profile.user.first_name }}</td>
+                                        <td>{{ profile.user.last_name }}</td>
+                                        <td>{{ profile.user.username }}</td>
+                                        <td>{{ profile.initial_password }}</td>
                                         <td>
                                             <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
                                             <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
