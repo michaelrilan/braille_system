@@ -273,8 +273,9 @@
               position: 'center',
               icon: 'success',  // You can customize the icon based on your tags or message type
               title:'<h3>Account Added Successfully!<br></h3> <h5>Please see below for the details</h5><p>'+
-                '<br>'+ 'Name: ' + messageData.username + ' <br> ' + 
-                messageData.time +'</p>',
+                '<br>'+ 'Name: ' + messageData.username + 
+                '<br>'+ 'Username: ' + messageData.username  +
+                '<br>'+ 'Initial Password: ' + messageData.username,
               showConfirmButton: true,
               confirmButtonColor: '#3248a8',
             });
