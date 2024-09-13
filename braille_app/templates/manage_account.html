@@ -5,22 +5,39 @@
             <div class="container">
                 <div class="page-inner">
                     <div class="row">
-                        <div class="container">
-                            <h3>Manage Accounts</h3>
-
-                        </div>
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title">Active Accounts</div>
+                                <div class="card-title">Manage Accounts</div>
                             </div>
                             <div class="card-body">
-
                                 <div class="container pb-3">
                                     <div class="row">
                                         <div class="col-10">
                                         </div>
                                         <div class="col">
-                                            <button class="btn btn-round btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-plus" aria-hidden="true"></i>Add Account</button>
+                                            <button class="btn btn-round btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#addaccount"><i class="fa fa-plus" aria-hidden="true"></i>Add Account</button>
+                                            <!-- Edit Modal -->
+                                            <div class="modal fade" id="addaccount" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Add Account</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form method="post" name="restore_braille">
+                                                        {%csrf_token%}
+                                                        <div class="modal-body">
+                                                                <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
+                                                            <p>This Braille File will be Restored</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" name="form_type" value="restore_braille" class="btn btn-primary">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -33,7 +50,6 @@
                                                 <th>User ID</th>
                                                 <th>Firstname</th>
                                                 <th>Lastname</th>
-                                                <th>Email</th>
                                                 <th>Username</th>
                                                 <th>Initial Password</th>
                                                 <th>Action</th>
@@ -44,30 +60,30 @@
                                                 <th>User ID</th>
                                                 <th>Firstname</th>
                                                 <th>Lastname</th>
-                                                <th>Email</th>
                                                 <th>Username</th>
                                                 <th>Initial Password</th>
                                                 <th>Action</th>
-
-                                                
                                             </tr>
                                         </tfoot>
                                         <tbody>
-                                           
                                             <tr>
-                                                <td>Lael Greer</td>
-                                                <td>Systems Administrator</td>
-                                                <td>London</td>
-                                                <td>21</td>
-                                                <td>21</td>
-                                                <td>2009/02/27</td>
-                                                <td>2009/02/27</td>
+                                                <td>Teacher</td>
+                                                <td>Michael Angelo</td>
+                                                <td>Rilan</td>
+                                                <td>micorilan</td>
+                                                <td>#J42RmWgQC4</td>
+                                                <td>
+                                                    <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                                
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

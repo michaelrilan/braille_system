@@ -4,7 +4,6 @@ from django.http import HttpResponse, request
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.decorators import login_required
 from .models import *
-import json
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -15,12 +14,22 @@ from happytransformer import TTSettings
 from textblob import TextBlob
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-# Get the current date
-
-# Create your views here.
 from django.views.decorators.cache import cache_control
 from docx import Document
 
+import random
+import string
+
+
+
+def generate_random_string(length=8):
+    # Define the possible characters
+    characters = string.ascii_letters + string.digits
+    
+    # Generate a random string
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    
+    return "#" + random_string
 
 
 brailleDict = {
@@ -40,8 +49,6 @@ brailleDict = {
   '?': '⠦', 
   "'": '⠄' 
 }
-
-
 
 
 
