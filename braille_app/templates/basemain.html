@@ -188,7 +188,7 @@
 
                                     <span class="profile-username">
                                         {% if user.is_authenticated %}
-                                        <span class="op-7">Welcome Back,</span> <span class="fw-bold">{{user.username}}</span> !
+                                        <span class="op-7">Hello,</span> <span class="fw-bold">{{user.first_name}} {{user.last_name}}</span> !
                                         {%endif%}
                                     </span>
                                 </a>
@@ -263,20 +263,38 @@
             $("#basic-datatables").DataTable({});
         });
     </script>
-
+    {% if messages %}
     {% for message in messages %}
+        {% if 'extra_info' in message.extra_tags %}
+        <script>
+            // Parse the JSON string into a JavaScript object
+            var messageData = JSON.parse('{{ message|escapejs }}');
+            Swal.fire({
+              position: 'center',
+              icon: 'success',  // You can customize the icon based on your tags or message type
+              title:'<h3>Account Added Successfully!<br></h3> <h5>Please see below for the details</h5><p>'+
+                '<br>'+ 'Name: ' + messageData.username + ' <br> ' + 
+                messageData.time +'</p>',
+              showConfirmButton: true,
+              confirmButtonColor: '#3248a8',
+            });
+          </script>
+          
 
-    <script>
-        Swal.fire({
-        position: 'center',
-        icon: '{{message.tags}}',
-        title: '{{message}}\n',
-        showConfirmButton: true,
-        confirmButtonColor: '#3248a8',
-        
-        })
-    </script>
+        {%else%}
+            <script>
+                Swal.fire({
+                position: 'center',
+                icon: '{{message.tags}}',
+                title: '{{message}}\n',
+                showConfirmButton: true,
+                confirmButtonColor: '#3248a8',
+                
+                })
+            </script>
+    {% endif %}
     {% endfor %}
+    {% endif %}
 
 </body>
 

@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 import os
+import json
 from datetime import datetime
 from happytransformer import HappyTextToText
 from happytransformer import TTSettings
@@ -30,6 +31,32 @@ def generate_random_string(length=8):
     random_string = ''.join(random.choice(characters) for _ in range(length))
     
     return "#" + random_string
+
+
+
+
+def generate_unique_username(first_name, last_name, existing_usernames):
+    # Split the first name to handle multiple words (e.g., "John Dave")
+    first_name_parts = first_name.split()
+    
+    # Get the first letter of each part of the first name
+    first_letters = ''.join([name[0].lower() for name in first_name_parts])
+    
+    # Lowercase the last name
+    last_name_lower = last_name.lower()
+    
+    # Combine the first letters and the lowercase last name to form the initial username
+    base_username = f"{first_letters}.{last_name_lower}"
+    unique_username = base_username
+    count = 1
+
+    # Check if the username is unique, if not, append a number to make it unique
+    while unique_username in existing_usernames:
+        unique_username = f"{base_username}{count}"
+        count += 1
+    
+    return unique_username
+
 
 
 brailleDict = {
@@ -60,8 +87,6 @@ def convert_to_braille(text):
 
 def uppercase(data):
     return str(data).upper()
-
-
 
 
 
@@ -244,6 +269,15 @@ def create_braille(request):
                 document.save(file_path)
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
+
+                # extra_params = {
+                #     'username': 'JohnDoe',
+                #     'time': '10:30 AM',
+                #     'action': 'login'
+                # }
+                # message_data = json.dumps(extra_params)
+
+                # messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
                 messages.success(request, 'Braille Successfully Created!')
                 # return redirect('download_braille', file_name= filename)
                 return redirect('create_braille')
@@ -388,8 +422,11 @@ def archives(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def manage_account(request):
-    return render(request, 'manage_account.html')
-
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            pass
+    context = {"scc":False}
+    return render(request, 'manage_account.html',context)
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

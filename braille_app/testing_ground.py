@@ -1,14 +1,30 @@
-import random
-import string
+l_username = ['ma.rilan', 'af.nazaire', 'jd.doe', 'jd.doe1']
 
-def generate_random_string(length=10):
-    # Define the possible characters
-    characters = string.ascii_letters + string.digits
+def generate_unique_username(first_name, last_name, existing_usernames):
+    # Split the first name to handle multiple words (e.g., "John Dave")
+    first_name_parts = first_name.split()
     
-    # Generate a random string
-    random_string = ''.join(random.choice(characters) for _ in range(length))
+    # Get the first letter of each part of the first name
+    first_letters = ''.join([name[0].lower() for name in first_name_parts])
     
-    return "#" + random_string
+    # Lowercase the last name
+    last_name_lower = last_name.lower()
+    
+    # Combine the first letters and the lowercase last name to form the initial username
+    base_username = f"{first_letters}.{last_name_lower}"
+    unique_username = base_username
+    count = 1
 
-# Generate a 10-character random string
-print(generate_random_string())
+    # Check if the username is unique, if not, append a number to make it unique
+    while unique_username in existing_usernames:
+        unique_username = f"{base_username}{count}"
+        count += 1
+    
+    return unique_username
+
+# Example usage
+first_name = "John Dave"
+last_name = "Doe"
+new_username = generate_unique_username(first_name, last_name, l_username)
+
+print(new_username)
