@@ -1,0 +1,129 @@
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<input type="text" name="example" list="exampleList" id="exampleInput">
+
+<datalist id="exampleList">
+  <option value="Aaa">  
+  <option value="bbbb">
+  <option value="dasdasdas">
+</datalist>
+
+<button id="addButton">Add to the list</button>
+
+<input type="text" id="sample" value="">
+
+<script>
+    const addButton = document.getElementById('addButton');
+    const exampleInput = document.getElementById('exampleInput');
+    const sampleInput = document.getElementById('sample');
+
+    // Function to clean up the sample input if part of the text is altered
+    function cleanUpInput() {
+        const currentValue = sampleInput.value;
+        const options = [...document.querySelectorAll('#exampleList option')].map(option => option.value);
+        let updatedValue = '';
+
+        currentValue.split(';').forEach(item => {
+            const trimmedItem = item.trim();
+            if (trimmedItem && options.includes(trimmedItem)) {
+                updatedValue += trimmedItem + '; ';
+            }
+        });
+
+        sampleInput.value = updatedValue.trim();
+    }
+
+    addButton.addEventListener('click', function() {
+        const selectedValue = exampleInput.value;
+        
+        if (selectedValue && !sampleInput.value.includes(selectedValue)) {
+            sampleInput.value += selectedValue + '; ';
+        }
+
+        // Clear the exampleInput for next entry
+        exampleInput.value = '';
+    });
+
+    // Listen for changes to the sample input
+    sampleInput.addEventListener('input', function() {
+        cleanUpInput();
+    });
+</script>
+
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<input type="text" name="example" list="exampleList" id="exampleInput">
+
+<datalist id="exampleList">
+  <option value="Aaa">  
+  <option value="bbbb">
+  <option value="dasdasdas">
+</datalist>
+
+<button id="addButton">Add to the list</button>
+
+<input type="text" id="sample" value="">
+
+<script>
+    const addButton = document.getElementById('addButton');
+    const exampleInput = document.getElementById('exampleInput');
+    const sampleInput = document.getElementById('sample');
+
+    // Function to clean up the sample input if part of the text is altered
+    function cleanUpInput() {
+        const currentValue = sampleInput.value;
+        const options = [...document.querySelectorAll('#exampleList option')].map(option => option.value);
+        let updatedValue = '';
+
+        currentValue.split(';').forEach(item => {
+            const trimmedItem = item.trim();
+            if (trimmedItem && options.includes(trimmedItem)) {
+                updatedValue += trimmedItem + '; ';
+            }
+        });
+
+        sampleInput.value = updatedValue.trim();
+    }
+
+    addButton.addEventListener('click', function() {
+        const selectedValue = exampleInput.value;
+        const options = [...document.querySelectorAll('#exampleList option')].map(option => option.value);
+
+        // Only add if the selected value exists in the datalist options
+        if (options.includes(selectedValue) && !sampleInput.value.includes(selectedValue)) {
+            sampleInput.value += selectedValue + '; ';
+        }
+
+        // Clear the exampleInput for next entry
+        exampleInput.value = '';
+    });
+
+    // Listen for changes to the sample input
+    sampleInput.addEventListener('input', function() {
+        cleanUpInput();
+    });
+</script>
+
+</body>
+</html>

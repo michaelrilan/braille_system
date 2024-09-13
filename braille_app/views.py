@@ -270,15 +270,15 @@ def create_braille(request):
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
 
-                extra_params = {
-                    'username': 'JohnDoe',
-                    'time': '10:30 AM',
-                    'action': 'login'
-                }
-                message_data = json.dumps(extra_params)
-                
-                messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
-                # messages.success(request, 'Braille Successfully Created!')
+                # extra_params = {
+                #     'username': 'JohnDoe',
+                #     'time': '10:30 AM',
+                #     'action': 'login'
+                # }
+                # message_data = json.dumps(extra_params)
+
+                # messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
+                messages.success(request, 'Braille Successfully Created!')
                 # return redirect('download_braille', file_name= filename)
                 return redirect('create_braille')
        
