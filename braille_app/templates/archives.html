@@ -16,62 +16,85 @@
                                             <tr>
                                                 <th> File ID</th>
                                                 <th>Title</th>
-                                                <th>Date Archived</th>
-                                                <th>View</th>
+                                                <th>Date Uploaded</th>
+                                
                                                 <th>Actions</th>
-
+                                                
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
                                                 <th> File ID</th>
                                                 <th>Title</th>
-                                                <th>Date Archived</th>
-                                                <th>View</th>
+                                                <th>Date Uploaded</th>
+                                        
                                                 <th>Actions</th>
                                                 
                                             </tr>
                                         </tfoot>
                                         <tbody>
-                                           
+                                           {% for bf in braille_infos%}
                                             <tr>
-                                                <td>Lael Greer</td>
-                                                <td>Systems Administrator</td>
-                                                <td>London</td>
-                                                <td>21</td>
-                                                <td>2009/02/27</td>
-                                               
+                                                <td>{{bf.id}}</td>
+                                                <td>{{bf.title}}</td>
+                                                <td>{{bf.date_saved}}</td>
+                                                <td>
+                                                    <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}">Restore</button>
+                                                    <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" >Delete</button>
+                                                    
+                                                    
+                                                    <!-- Edit Modal -->
+                                                    <div class="modal fade" id="edit{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Restore Braille</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form method="post" name="restore_braille">
+                                                                {%csrf_token%}
+                                                                <div class="modal-body">
+                                                                        <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
+                                                                    <p>This Braille File will be Restored</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                                    <button type="submit" name="form_type" value="restore_braille" class="btn btn-primary">Yes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Archive Modal -->
+                                                    <div class="modal fade" id="archive{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Are you Sure?</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form method="post" name="delete_braille">
+                                                                {%csrf_token%}
+                                                                <div class="modal-body">
+                                                                        <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
+                                                                    <p>This action is irreversible!</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                                    <button type="submit" name="form_type" value="delete_braille" class="btn btn-primary">Yes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>Jonas Alexander</td>
-                                                <td>Developer</td>
-                                                <td>San Francisco</td>
-                                                <td>30</td>
-                                                <td>2010/07/14</td>
-                                                
-                                            </tr>
-                                            <tr>
-                                                <td>Shad Decker</td>
-                                                <td>Regional Director</td>
-                                                <td>Edinburgh</td>
-                                                <td>51</td>
-                                                <td>2008/11/13</td>
-                                               
-                                            </tr>
-                                            <tr>
-                                                <td>Michael Bruce</td>
-                                                <td>Javascript Developer</td>
-                                                <td>Singapore</td>
-                                                <td>29</td>
-                                                <td>2011/06/27</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Donna Snider</td>
-                                                <td>Customer Support</td>
-                                                <td>New York</td>
-                                                <td>27</td>
-                                                <td>2011/01/25</td>
-                                            </tr>
+                                            {%endfor%}
+                                            
                                         </tbody>
                                     </table>
                                 </div>

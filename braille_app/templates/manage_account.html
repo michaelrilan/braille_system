@@ -1,0 +1,75 @@
+{% extends "basemain.html" %}
+{% block title %} Manage Account -- {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="container">
+                            <h3>Manage Accounts</h3>
+
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Active Accounts</div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="container pb-3">
+                                    <div class="row">
+                                        <div class="col-10">
+                                        </div>
+                                        <div class="col">
+                                            <button class="btn btn-round btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i class="fa fa-plus" aria-hidden="true"></i>Add Account</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="table-responsive">
+                                    
+                                    <table id="basic-datatables" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>User ID</th>
+                                                <th>Firstname</th>
+                                                <th>Lastname</th>
+                                                <th>Email</th>
+                                                <th>Username</th>
+                                                <th>Initial Password</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>User ID</th>
+                                                <th>Firstname</th>
+                                                <th>Lastname</th>
+                                                <th>Email</th>
+                                                <th>Username</th>
+                                                <th>Initial Password</th>
+                                                <th>Action</th>
+
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                           
+                                            <tr>
+                                                <td>Lael Greer</td>
+                                                <td>Systems Administrator</td>
+                                                <td>London</td>
+                                                <td>21</td>
+                                                <td>21</td>
+                                                <td>2009/02/27</td>
+                                                <td>2009/02/27</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endblock %}

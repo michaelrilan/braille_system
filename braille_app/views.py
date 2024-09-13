@@ -20,6 +20,9 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 from django.views.decorators.cache import cache_control
 from docx import Document
+
+
+
 brailleDict = {
   'a': '⠁', 'b': '⠃', 'c': '⠉', 'd': '⠙', 'e': '⠑', 'f': '⠋', 'g': '⠛',
   'h': '⠓', 'i': '⠊', 'j': '⠚', 'k': '⠅', 'l': '⠇', 'm': '⠍', 'n': '⠝',
@@ -40,11 +43,19 @@ brailleDict = {
 
 
 
+
+
 def convert_to_braille(text):
     return ''.join(brailleDict.get(char, char) for char in text)
 
+
+
+
 def uppercase(data):
     return str(data).upper()
+
+
+
 
 
 def check_text(text):
@@ -59,6 +70,9 @@ def check_text(text):
     print("Corrected Text:", corrected_text)
     
     return(corrected_text)
+
+
+
 
 
 @csrf_exempt
@@ -83,6 +97,9 @@ def grammar_check(request):
 
 
 
+
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_login(request):
     if request.method == 'POST':
@@ -95,6 +112,8 @@ def user_login(request):
         else:
             messages.error(request, "Invalid Credentials!")
     return render(request, 'login.html')
+
+
 
 
 
@@ -119,7 +138,6 @@ def register(request):
             messages.error(request,'Username Already Exists, Try Another')
         elif pw1 != pw2:
             messages.error(request,'Passwords Not Equal')
-
         else:
 
             try:
@@ -144,6 +162,8 @@ def register(request):
 
 
 
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def dashboard(request):
@@ -160,6 +180,8 @@ def dashboard(request):
 
 
 
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def tutorial(request):
@@ -173,6 +195,8 @@ def tutorial(request):
             'activity_history':activity_history
         }
     return render(request, 'tutorial.html',context)
+
+
 
 
 
@@ -222,6 +246,8 @@ def create_braille(request):
 
 
 
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def view_braille(request):
@@ -230,8 +256,6 @@ def view_braille(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             form_type = request.POST.get('form_type')
-
-
 
             # DOWNLOAD BRAILLE FUNCTION
             if form_type == 'download_braille':
@@ -307,6 +331,10 @@ def view_braille(request):
     return render(request, 'view_braille.html',context)
 
 
+
+
+
+
 @login_required(login_url='login')
 def download_braille(request, file_name):
     file_path = os.path.join('static/documents', file_name)
@@ -320,16 +348,40 @@ def download_braille(request, file_name):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def archives(request):
-
-    return render(request, 'archives.html')
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form_type = request.POST.get('form_type')
+            if form_type == 'delete_braille':
+                braille_id = request.POST.get('braille_id')
+                try:
+                    record_to_delete = BrailleInfo.objects.get(id=braille_id)
+                    record_to_delete.delete()
+                    messages.success(request, 'Deleted Successfully!')
+                    return redirect('archives')
+                except BrailleInfo.DoesNotExist:
+                    messages.error(request, 'Braille is already Deleted!')
+            elif form_type == 'restore_braille':
+                braille_id = request.POST.get('braille_id')
+                braille_info = BrailleInfo.objects.get(id=braille_id)
+                braille_info.deleteflag = False
+                braille_info.save()
+                messages.success(request, 'Braille Successfully moved to Archive')
+                return redirect('archives')
+        user_id = request.user.id
+        braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = True)
+        context = {'braille_infos': braille_infos}
+        
+    else:
+        return redirect('login')
+    
+    return render(request, 'archives.html',context)
 
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
-def report(request):
-
-    return render(request, 'report.html')
+def manage_account(request):
+    return render(request, 'manage_account.html')
 
 
 
@@ -373,6 +425,8 @@ def account_settings(request):
     else:
          return redirect('login')
     return render(request, 'account_settings.html')
+
+
 
 
 
