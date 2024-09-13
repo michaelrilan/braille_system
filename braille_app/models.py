@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    initial_password = models.CharField(max_length=255)
     is_faculty = models.BooleanField(verbose_name='is_faculty', default=False)
     is_student = models.BooleanField(verbose_name='is_student', default=False)
     deleteflag = models.BooleanField(default=False)

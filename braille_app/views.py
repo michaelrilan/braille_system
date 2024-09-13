@@ -443,6 +443,14 @@ def manage_account(request):
                         validate_password(pw)
                         user = User.objects.create_user(username=username, email=email, password=pw, first_name=fname, last_name=lname)
                         user.save()
+                        # Create and save the UserProfile
+                        user_profile = UserProfile(
+                            user=user,
+                            initial_password=pw,
+                            is_student=True  # Set is_student to True
+                        )
+                        user_profile.save()
+
 
                         fullname = fname + ' ' + lname
                         context = {
