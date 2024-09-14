@@ -3,6 +3,7 @@
 
 {% block content %}
             <div class="container">
+                
                 <div class="page-inner">
                     <div class="row">
                         <div class="card">
@@ -49,8 +50,8 @@
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"> <i class="fa fa-edit" aria-hidden="true"></i></button>
-                                                    <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-archive" aria-hidden="true"></i></button>
-                                                    <button class="btn btn-round btn-sm btn-info"><i class="fa fa-share" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#archive{{ bf.id }}" ><i class="fa fa-archive" aria-hidden="true"></i></button>
+                                                    <button class="btn btn-round btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#share{{ bf.id }}" ><i class="fa fa-share" aria-hidden="true"></i></button>
                                                     
                                                     
                                                     
@@ -112,6 +113,47 @@
                                                     </div>
 
 
+                                                    <!-- Share Modal -->
+                                                    <div class="modal fade" id="share{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Share Modal</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form method="post" name="share_braille">
+                                                                {%csrf_token%}
+                                                                <div class="modal-body">
+                                                                   
+                                                                        <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
+                                                                        <label for="UsernameOptions">Type the username and click Add:</label>
+                                                                        
+                                                                        <div class="mb-3">
+                                                                            <input type="text" class="form-control" list="UsernameOptions" id="UsernameInput">
+                                                                            <datalist id="UsernameOptions">
+                                                                                {% for profile in usernames %}
+                                                                                    <option value="{{ profile.user.username }}">  
+                                                                                {% endfor %}
+
+                                                                              </datalist>
+                                                                        <button type="button" id="addButton" class="btn-round btn-sm"> <i class="fa fa-plus" aria-hidden="true"></i>Add</button>
+
+                                                                        </div>
+
+                                                                        
+                                                                        <div class="mb-3">
+                                                                            <label for="UsernameList">List of Usernames: </label> 
+                                                                            <input type="text" class="form-control" id="UsernameList" name="username_list" value="" >
+                                                                        </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="submit" name="form_type" value="share_braille" class="btn btn-primary">Share</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        </div>
+                                                    </div>
 
                                                 </td>
                                             </tr>
@@ -126,7 +168,44 @@
                 </div>
             </div>
 
-
+            <script>
+                const addButton = document.getElementById('addButton');
+                const UsernameInput = document.getElementById('UsernameInput');
+                const UsernameList = document.getElementById('UsernameList');
+                // Function to clean up the sample input if part of the text is altered
+                function cleanUpInput() {
+                    const currentValue = UsernameList.value;
+                    const options = [...document.querySelectorAll('#UsernameOptions option')].map(option => option.value);
+                    let updatedValue = '';
+            
+                    currentValue.split(';').forEach(item => {
+                        const trimmedItem = item.trim();
+                        if (trimmedItem && options.includes(trimmedItem)) {
+                            updatedValue += trimmedItem + '; ';
+                        }
+                    });
+            
+                    UsernameList.value = updatedValue.trim();
+                }
+            
+                addButton.addEventListener('click', function() {
+                    const selectedValue = UsernameInput.value;
+                    const options = [...document.querySelectorAll('#UsernameOptions option')].map(option => option.value);
+            
+                    // Only add if the selected value exists in the datalist options
+                    if (options.includes(selectedValue) && !UsernameList.value.includes(selectedValue)) {
+                        UsernameList.value += selectedValue + '; ';
+                    }
+            
+                    // Clear the UsernameInput for next entry
+                    UsernameInput.value = '';
+                });
+            
+                // Listen for changes to the sample input
+                UsernameList.addEventListener('input', function() {
+                    cleanUpInput();
+                });
+            </script>
   
   
             {% endblock %}

@@ -364,9 +364,19 @@ def view_braille(request):
                 braille_info.save()
                 messages.success(request, 'Braille Successfully moved to Archive')
                 return redirect('view_braille')
+            elif form_type == 'archive_braille':
+                braille_id = request.POST.get('braille_id')
                 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
-        context = {'braille_infos': braille_infos}
+
+        usernames = UserProfile.objects.filter(
+                is_student=True, 
+                deleteflag=False)
+
+
+        context = {'braille_infos': braille_infos,
+                   'usernames': usernames
+                   }
     else: 
         return redirect('login')
     return render(request, 'view_braille.html',context)

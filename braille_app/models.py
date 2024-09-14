@@ -40,6 +40,7 @@ class SharedBraille(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='braille_owner')
     shared_to_user = models.ForeignKey(User, on_delete=models.CASCADE,related_name='brailler_receiver')
     braille_info = models.ForeignKey(BrailleInfo,on_delete=models.CASCADE)
+    date_shared = models.DateField(auto_now_add=True)
     class Meta:
         db_table = 'SharedBraille'
     
