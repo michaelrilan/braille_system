@@ -35,24 +35,25 @@
                                             </tr>
                                         </tfoot>
                                         <tbody>
-                                           
+
+                                           {%for entry in shared_braille_entries%}
                                             <tr>
-                                                <td>Lael Greer</td>
-                                                <td>Systems Administrator</td>
-                                                <td>London</td>
-                                                <td>21</td>
-                                                <td>2009/02/27</td>
-                                              
+                                                <td>{{entry.braille_info.id}}</td>
+                                                <td>{{entry.braille_info.title}}</td>
+                                                <td>{{entry.user.first_name}} {{entry.user.last_name}}</td>
+                                                <td>{{entry.date_shared}}</td>
+                                                <td>
+                                                    <form method="post" id="download_braille">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="braille_id" value="{{ entry.braille_info.id }}" style="display: none;">
+                                                        <input type="text" name="filename" value="{{ entry.braille_info.filename }}" style="display: none;">
+                                                        <button type="submit" name="form_type" value="download_braille" class="btn btn-round btn-sm btn-primary">
+                                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>Jonas Alexander</td>
-                                                <td>Developer</td>
-                                                <td>San Francisco</td>
-                                                <td>30</td>
-                                                <td>20</td>
-                                               
-                                                
-                                            </tr>
+                                            {%endfor%}
                                         </tbody>
                                     </table>
                                 </div>

@@ -409,7 +409,7 @@ def view_braille(request):
                                 user_id=request.user.id  # Assuming the current user is the one sharing the file
                             )
                             new_shared_braille.save()
-                            
+
                             activity_history = ActivityHistory(user_id = user_id,activity_log="Shared Braille File(File # " +str(braille_id) + ")")
                             activity_history.save()
 
@@ -429,9 +429,6 @@ def view_braille(request):
     else: 
         return redirect('login')
     return render(request, 'view_braille.html',context)
-
-
-
 
 
 
@@ -569,8 +566,45 @@ def manage_account(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def shared(request):
+    if request.user.is_authenticated:
+       user_id = request.user.id
+       if request.method == 'POST':
+            braille_id = request.POST.get('braille_id')
+            filename = request.POST.get('filename')
+            documents_dir = 'static/documents'
+            fetch_braille = BrailleInfo.objects.get(id=braille_id,deleteflag = False)
+            title = fetch_braille.title
+            braille_text = fetch_braille.braille_text
+            braille_draft = fetch_braille.braille_draft
+
+            if not os.path.exists(documents_dir):
+                os.makedirs(documents_dir)
+            file_path = os.path.join(documents_dir, filename)
+            # Check if the file exists, if not, recreate it
+            if not os.path.exists(file_path):
+                try:
+                    # Create and save the document
+                    document = Document()
+                    document.add_heading(title, level=1)
+                    document.add_paragraph(braille_text)
+                    document.add_paragraph(braille_draft)
+                    document.save(file_path)
+                except Exception as e:
+                    print(f"Error creating document: {e}")
+
+            try:
+                return redirect('download_braille', file_name= filename) 
+            except Exception as e:
+                print(f"Error during download redirection: {e}")
+    else:
+         return redirect('login')
+   
+    # Fetch SharedBraille entries where shared_to_user is the logged-in user
+    shared_braille_entries = SharedBraille.objects.select_related('user', 'shared_to_user', 'braille_info').filter(shared_to_user=user_id)
     
-    return render(request, 'shared.html')
+    # Prepare the context dictionary correctly
+    context = {'shared_braille_entries': shared_braille_entries}
+    return render(request, 'shared.html',context)
 
 
 
