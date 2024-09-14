@@ -11,3 +11,5 @@ torch
 gramformer
 happytransformer
 textblob
+SpeechRecognition
+pydub
