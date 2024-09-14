@@ -123,13 +123,15 @@
                             </span>
                             <h4 class="text-section">Accounts</h4>
                         </li>
-
+                        
+                        {% if user_profile.is_faculty%}
                         <li class="nav-item mb-3">
                             <a href="{% url 'manage_account' %}">
                                 <i class="fa fa-users"></i>
                                 <p>Manage Accounts</p>
                             </a>
                         </li>
+                        {%endif%}
 
                 
                         

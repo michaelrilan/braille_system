@@ -1,26 +1,3 @@
-runSpeechRecog = () => {
-    var txt_content = document.getElementById("content");
-    txt_content.placeholder = "Loading text...";
-    txt_content.readOnly = true;
-    
-    var output = document.getElementById('content');
-    var action = document.getElementById('action');
-    let recognization = new webkitSpeechRecognition();
-    recognization.onstart = () => {
-       action.placeholder = "Listening...";
-    }
-    recognization.onresult = (e) => {
-       var transcript = e.results[0][0].transcript;
-       output.innerHTML = transcript;
-       output.classList.remove("hide")
-       action.innerHTML = "";
-       txt_content.readOnly = false;
-       txt_content.placeholder = "Type Something...";
-
-    }
-    recognization.start();
- }
-
 // GRAMMAR CHECKER REQUEST
 
  $(document).ready(function () {
