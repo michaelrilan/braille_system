@@ -409,6 +409,9 @@ def view_braille(request):
                                 user_id=request.user.id  # Assuming the current user is the one sharing the file
                             )
                             new_shared_braille.save()
+                            
+                            activity_history = ActivityHistory(user_id = user_id,activity_log="Shared Braille File(File # " +str(braille_id) + ")")
+                            activity_history.save()
 
                     messages.success(request, 'Braille File Successfully Shared.')
                     return redirect('view_braille')
