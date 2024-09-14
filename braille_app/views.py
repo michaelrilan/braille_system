@@ -369,9 +369,49 @@ def view_braille(request):
                 braille_info.save()
                 messages.success(request, 'Braille Successfully moved to Archive')
                 return redirect('view_braille')
+            
+
             elif form_type == 'share_braille':
                 braille_id = request.POST.get('braille_id')
-                print(braille_id)
+                username_list = request.POST.get('usernames')
+                if username_list == '':
+                    messages.error(request, 'Please Add at least 1 username')
+                    return redirect('view_braille')
+
+                else:
+                    # Split by semicolon
+                    split_list = username_list.split(';')
+
+                    # Strip whitespaces and filter out empty strings
+                    split_list = [item.strip() for item in split_list if item.strip()]
+
+                    user_ids = []
+
+                    for username in split_list:
+                        try:
+                            # Fetch the user based on the username (use 'username__iexact' for case-insensitive match)
+                            user = User.objects.get(username=username)
+                            user_ids.append(user.id)  # Add the user's ID to the list
+                        except User.DoesNotExist:
+                            print(f"User '{username}' does not exist.")
+                            user_ids.append(None)  # Append None if the user doesn't exist
+
+                    for uid in user_ids:
+                        if uid is None:
+                            continue  # Skip users that don't exist
+
+                        # Check if the record already exists in SharedBraille
+                        if not SharedBraille.objects.filter(braille_info_id=braille_id, shared_to_user_id=uid).exists():
+                            # Create and save the new entry in the database
+                            new_shared_braille = SharedBraille(
+                                braille_info_id=braille_id,
+                                shared_to_user_id=uid,
+                                user_id=request.user.id  # Assuming the current user is the one sharing the file
+                            )
+                            new_shared_braille.save()
+
+                    messages.success(request, 'Braille File Successfully Shared.')
+                    return redirect('view_braille')
                 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
 
