@@ -37,6 +37,8 @@
                                         <tbody>
 
                                            {%for entry in shared_braille_entries%}
+                                           {%if entry.braille_info.deleteflag == True %}
+                                           {%else%}
                                             <tr>
                                                 <td>{{entry.braille_info.id}}</td>
                                                 <td>{{entry.braille_info.title}}</td>
@@ -53,6 +55,7 @@
                                                     </form>
                                                 </td>
                                             </tr>
+                                            {%endif%}
                                             {%endfor%}
                                         </tbody>
                                     </table>

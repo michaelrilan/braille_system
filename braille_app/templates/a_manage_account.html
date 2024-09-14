@@ -39,9 +39,9 @@
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="role" class="form-label">Role</label>
-                                                            <select class="form-select" id="role" name="role" required >
+                                                            <select class="form-select" id="status" name="status" required >
                                                                 <option value="teacher">Teacher</option>
-                                                                <option value="student">Student</option>
+                                                                <option value="teacher">Student</option>
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
@@ -68,7 +68,6 @@
                                 <thead>
                                     <tr>
                                         <th>User ID</th>
-                                        <th>Role</th>   
                                         <th>Firstname</th>
                                         <th>Lastname</th>
                                         <th>Username</th>
@@ -79,7 +78,6 @@
                                 <tfoot>
                                     <tr>
                                         <th>User ID</th>
-                                        <th>Role</th>
                                         <th>Firstname</th>
                                         <th>Lastname</th>
                                         <th>Username</th>
@@ -91,24 +89,14 @@
                                     {% for profile in profiles %}
                                     <tr>
                                         <td>{{ profile.user.id }}</td>
-                                        {%if profile.is_student == True%}
-                                            <td>Student</td>
-                                        {%elif profile.is_faculty == True%}
-                                            <td>Teacher</td>
-                                        {%endif%}
                                         <td>{{ profile.user.first_name }}</td>
                                         <td>{{ profile.user.last_name }}</td>
                                         <td>{{ profile.user.username }}</td>
                                         <td>{{ profile.initial_password }}</td>
                                         <td>
-                                            {%if profile.is_student == True%}
-                                                <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editaccount{{ profile.user.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
-                                                <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#deleteaccount{{profile.user.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
-                                            {%elif profile.is_faculty == True%}
-                                            
-                                            {%endif%}
+                                            <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editaccount{{ profile.user.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
+                                            <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#deleteaccount{{profile.user.id }}" ><i class="fa fa-trash" aria-hidden="true"></i></button>
 
-                                            
 
                                             <!-- Edit Account Modal -->
                                                 <div class="modal fade" id="editaccount{{ profile.user.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

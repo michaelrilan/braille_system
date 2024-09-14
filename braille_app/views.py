@@ -213,10 +213,15 @@ def dashboard(request):
     if request.user.is_authenticated:
         user_id = request.user.id
         braille_infos_count = BrailleInfo.objects.filter(user_id=user_id).count()
+        shared_to_me = SharedBraille.objects.filter(shared_to_user = user_id).count()
+        archives = BrailleInfo.objects.filter(user_id = user_id,deleteflag=True).count()
         activity_history = ActivityHistory.objects.filter(user_id=user_id).order_by('-date_log')
 
+        print(archives)
         context = {
+            'archives_count' : archives,
             'braille_infos_count': braille_infos_count,
+            'shared_to_me_count': shared_to_me,
             'activity_history':activity_history
         }
     return render(request, 'dashboard.html',context)
@@ -485,27 +490,34 @@ def manage_account(request):
                 fname = request.POST.get('firstname')
                 lname = request.POST.get('lastname')
                 email = request.POST.get('email')
+                role = request.POST.get('role')
                 usernames = list(User.objects.values_list('username', flat=True))
                 username = generate_unique_username(fname,lname,usernames)
                 pw = generate_random_string()
                 email_check =  User.objects.filter(email = email).count()
-                fname_check =  User.objects.filter(first_name = fname,last_name = lname).count()
                 if email_check > 0:
                     messages.error(request,'Email Already Exists')
-                elif fname_check>0:
-                    messages.error(request,'Your Fullname Already Exists')
                 else:
                     try:
                         validate_password(pw)
                         user = User.objects.create_user(username=username, email=email, password=pw, first_name=fname, last_name=lname)
                         user.save()
-                        # Create and save the UserProfile
-                        user_profile = UserProfile(
-                            user=user,
-                            initial_password=pw,
-                            is_student=True  # Set is_student to True
-                        )
-                        user_profile.save()
+                        if role == 'teacher':
+                            user_profile = UserProfile(
+                                user=user,
+                                initial_password=pw,
+                                is_student=False,
+                                is_faculty = True
+                            )
+                            user_profile.save()
+                        elif role == 'student':
+                            user_profile = UserProfile(
+                                user=user,
+                                initial_password=pw,
+                                is_student=True,
+                                is_faculty = False
+                            )
+                            user_profile.save()
 
 
                         fullname = fname + ' ' + lname
@@ -514,6 +526,7 @@ def manage_account(request):
                             'username': username,
                             'initial_password': pw
                         }
+                        
                         message_data = json.dumps(context)
                         messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
                         return redirect('manage_account')
@@ -556,7 +569,9 @@ def manage_account(request):
                 messages.success(request,'Account Deleted Successfully!')
                 return redirect('manage_account')
 
-    profiles = UserProfile.objects.select_related('user').filter(deleteflag=False, is_student = True, is_faculty = False)
+    # profiles = UserProfile.objects.select_related('user').filter(deleteflag=False, user_id != request.user.id)
+    profiles = UserProfile.objects.select_related('user').filter(deleteflag=False).exclude(user_id=request.user.id)
+
     context = {
         'profiles':profiles
         }
