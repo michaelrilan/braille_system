@@ -474,7 +474,33 @@ def manage_account(request):
 
                 # return redirect('manage_account')
                 return render(request, "manage_account.html", context)
-    profiles = UserProfile.objects.select_related('user').filter(deleteflag=False)
+            elif form_type == 'edit_account':
+                user_id = request.POST.get('user_id')
+                fname = request.POST.get('firstname')
+                lname = request.POST.get('lastname')
+                email = request.POST.get('email')
+                print(user_id)
+                user_profile = User.objects.get(id=user_id)
+                user_profile.first_name = fname
+                user_profile.last_name = lname
+                user_profile.email = email
+                user_profile.save()
+
+                created_id = user_profile.id
+                activity_history = ActivityHistory(user_id = user_id,activity_log="Edited Profile(User ID # " +str(created_id) + ")")
+                activity_history.save()
+                messages.success(request,'Account Updated Successfully!')
+                return redirect('manage_account')
+
+            elif form_type == 'delete_account':
+                user_profile_id = request.POST.get('user_profile_id')
+                user_profile = UserProfile.objects.get(id=user_profile_id)
+                user_profile.deleteflag = True
+                user_profile.save()
+                messages.success(request,'Account Deleted Successfully!')
+                return redirect('manage_account')
+
+    profiles = UserProfile.objects.select_related('user').filter(deleteflag=False, is_student = True, is_faculty = False)
     context = {
         'profiles':profiles
         }
@@ -484,7 +510,7 @@ def manage_account(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def shared(request):
-
+    
     return render(request, 'shared.html')
 
 
