@@ -17,11 +17,22 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_control
 from docx import Document
-
+import requests
 import random
 import string
 
+import socket
+import logging
 
+logger = logging.getLogger(__name__)
+def check_internet_connection():
+    try:
+        # Test a connection to a reliable service
+        response = requests.get('https://www.google.com/', timeout=5)
+        return response.status_code == 200
+    except requests.ConnectionError as e:
+        logger.error(f"Internet connection error: {e}")
+        return False
 
 def generate_random_string(length=8):
     # Define the possible characters
@@ -270,19 +281,13 @@ def create_braille(request):
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
 
-                # extra_params = {
-                #     'username': 'JohnDoe',
-                #     'time': '10:30 AM',
-                #     'action': 'login'
-                # }
-                # message_data = json.dumps(extra_params)
-
-                # messages.add_message(request, messages.SUCCESS, message_data, extra_tags='extra_info')
                 messages.success(request, 'Braille Successfully Created!')
-                # return redirect('download_braille', file_name= filename)
+
                 return redirect('create_braille')
-       
-    return render(request, 'create_braille.html')
+    context = {'check_internet': check_internet_connection()}
+    if not context['check_internet']:
+        messages.info(request, 'No internet connection detected. Features like Grammar Checker and Speech to Text may not work')
+    return render(request, 'create_braille.html', context)
 
 
 
@@ -364,8 +369,9 @@ def view_braille(request):
                 braille_info.save()
                 messages.success(request, 'Braille Successfully moved to Archive')
                 return redirect('view_braille')
-            elif form_type == 'archive_braille':
+            elif form_type == 'share_braille':
                 braille_id = request.POST.get('braille_id')
+                print(braille_id)
                 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
 

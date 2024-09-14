@@ -49,6 +49,11 @@
     }
   </style>
             <div class="container">
+              {%if not check_internet%}
+              <div class="alert alert-warning" style="background-color: rgb(230, 216, 143);">
+                  <strong><i class="fa fa-exclamation" aria-hidden="true"></i>   No Internet Connection.</strong>   Features like Grammar Checker and Speech to Text may not work
+              </div>
+              {%endif%}
                 <div class="page-inner">
                     <div class="row">
                         <div class="card">
@@ -95,6 +100,7 @@
                 </div>
          
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <!-- <script src="static/main/assets/js/jquery-3.6.0.min.js"></script> -->
         <script src="static/main/assets/js/events.js"></script>
             
             <script>
