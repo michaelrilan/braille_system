@@ -2,8 +2,14 @@
 {% block title %} Create Braille -- {% endblock %}
 
 {% block content %}
+<!-- <div id="loader">
+  <div class="loader"></div>
+  <div class="loader-text">Loading Please Wait...</div>
+</div> -->
+
+
 <!-- Add custom loader styles -->
-<style>
+<!-- <style>
     /* Hide content when loader is visible */
     .hide-when-loading {
       transition: opacity 0.3s;
@@ -47,25 +53,30 @@
       font-size: 1.2em;
       color: #3498db;
     }
-  </style>
+  </style> -->
+          <!-- Loader Section -->
+        <div id="loader">
+          <center>
+            <div class="loader"></div>
+          </center>
+          <div class="loader-text">Loading Please Wait...</div>
+        </div>
             <div class="container">
+              
               {%if not check_internet%}
               <div class="alert alert-warning" style="background-color: rgb(230, 216, 143);">
                   <strong><i class="fa fa-exclamation" aria-hidden="true"></i>   No Internet Connection.</strong>   Features like Grammar Checker and Speech to Text may not work
               </div>
               {%endif%}
                 <div class="page-inner">
+                  
                     <div class="row">
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">Create Braille</div>
                             </div>
                             <div class="card-body">
-                                <!-- Loader -->
-                            <div id="loader">
-                                <div class="loader"></div>
-                                <div class="loader-text">Processing...</div>
-                            </div>
+                            
                                 <form method="post">
                                     {%csrf_token%}
                                     <div class="form-group">
@@ -98,10 +109,8 @@
                         </div>
                     </div>
                 </div>
-         
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <script src="static/main/assets/js/events.js"></script>
         <!-- ORIGINAL CODE -->
         
         <script>
@@ -135,4 +144,5 @@
           }
         </script>
         
+    
             {% endblock %}

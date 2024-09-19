@@ -95,7 +95,7 @@ DATABASES = {
         'NAME':'braille_db',
         'USER' : 'root',
         'PASSWORD':'',
-        'HOST':'192.168.1.6',
+        'HOST':'localhost',
         'PORT': '3306',
         # 'OPTIONS': {
         #     'init_command': "SET sql_mode= 'STRICT_TRANS_TABLES'",
@@ -139,7 +139,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'braille_app/static')
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
