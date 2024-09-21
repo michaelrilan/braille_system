@@ -20,11 +20,13 @@ from docx import Document
 import requests
 import random
 import string
-
+from pydub import AudioSegment
+import speech_recognition as sr
 import socket
 import logging
 
 logger = logging.getLogger(__name__)
+
 def check_internet_connection():
     try:
         # Test a connection to a reliable service
@@ -42,6 +44,68 @@ def generate_random_string(length=8):
     random_string = ''.join(random.choice(characters) for _ in range(length))
     
     return "#" + random_string
+
+
+
+# Helper function to convert audio file to WAV format
+def convert_to_wav(input_file_path, output_file_path):
+    try:
+        # Load the audio file
+        audio = AudioSegment.from_file(input_file_path)
+        # Export as WAV
+        audio.export(output_file_path, format='wav')
+        return True
+    except Exception as e:
+        logger.error(f'Conversion error: {e}')
+        return False
+    
+
+@csrf_exempt
+def upload_audio(request):
+    if request.method == 'POST':
+        audio_file = request.FILES.get('audio')
+        
+        if audio_file:
+            logger.info(f'File uploaded: {audio_file.name}, Size: {audio_file.size}, Content-Type: {audio_file.content_type}')
+            
+            temp_input_path = 'temp_audio_input'
+            temp_output_path = 'temp_audio_output.wav'
+            
+            try:
+                with open(temp_input_path, 'wb') as temp_file:
+                    for chunk in audio_file.chunks():
+                        temp_file.write(chunk)
+                
+                if not convert_to_wav(temp_input_path, temp_output_path):
+                    return JsonResponse({'transcription': 'Failed to convert audio file'}, status=500)
+                
+                recognizer = sr.Recognizer()
+                
+                try:
+                    with sr.AudioFile(temp_output_path) as source:
+                        audio = recognizer.record(source)
+                    
+                    transcription = recognizer.recognize_google(audio)
+                    return JsonResponse({'transcription': transcription})
+                
+                except ValueError as e:
+                    logger.error(f'Audio file reading error: {e}')
+                    return JsonResponse({'transcription': 'Invalid audio file format'}, status=400)
+            
+            except Exception as e:
+                logger.error(f'Unexpected error while handling the file: {e}')
+                return JsonResponse({'transcription': 'Sorry I cant catch your voice at the moment, please try again later'}, status=500)
+            
+            finally:
+                if os.path.exists(temp_input_path):
+                    os.remove(temp_input_path)
+                if os.path.exists(temp_output_path):
+                    os.remove(temp_output_path)
+        
+        return JsonResponse({'transcription': 'No audio file received'}, status=400)
+    
+    return JsonResponse({'transcription': 'Invalid request'}, status=400)
+
 
 
 

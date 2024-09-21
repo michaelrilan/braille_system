@@ -2,147 +2,168 @@
 {% block title %} Create Braille -- {% endblock %}
 
 {% block content %}
+
+  <!-- Loader Section -->
 <!-- <div id="loader">
-  <div class="loader"></div>
+  <center>
+    <div class="loader"></div>
+  </center>
   <div class="loader-text">Loading Please Wait...</div>
 </div> -->
 
+    <div class="container">
+      
+      {%if not check_internet%}
+      <div class="alert alert-warning" style="background-color: rgb(230, 216, 143);">
+          <strong><i class="fa fa-exclamation" aria-hidden="true"></i>   No Internet Connection.</strong>   Features like Grammar Checker and Speech to Text may not work
+      </div>
+      {%endif%}
+        <div class="page-inner">
+          
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Create Braille</div>
+                    </div>
+                    <div class="card-body">
+                    
+                        <form method="post">
+                            {%csrf_token%}
+                            <div class="form-group">
+                                <label for="title">Title:</label>
+                                <input type="text" class="form-control mb-4" name="title" placeholder="Enter Title" required />
+                                <div class="col">
+                                    <label for="comment">Type Content or use the Text to Speech below: </label>
+                                    <!-- <div class="speaker"
+                                        style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
+                                        <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
+                                        <button type="button" onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
+                                            <i class="fa fa-microphone" aria-hidden="true"></i> Speak
+                                        </button>
+                                    </div> -->
+                                    <audio id="audioPlayback" controls style="display: none;"></audio>
+                                    <button type="button" id="startButton">Start Recording</button>
+                                    <button type="button" id="stopButton" disabled>Stop Recording</button>
+                                </div>
+                    
+                            </div>
+                            <textarea name="braille_draft" class="form-control" minlength="0" maxlength="250"
+                                placeholder="Type Something..." id="content" rows="5" required></textarea>
+                    </div>
+                    
+                              <div class="card-action">
+                                <button type="button" id="grammar_btn" class="btn btn-info mr-4">Grammar Checker</button>
+                                <button type="submit" id="submit_btn" class="btn btn-primary mr-4">Submit</button>
+                                <!-- <button class="btn btn-danger mr-4">Cancel</button> -->
+                              </div>
+                        </form>
 
-<!-- Add custom loader styles -->
-<!-- <style>
-    /* Hide content when loader is visible */
-    .hide-when-loading {
-      transition: opacity 0.3s;
-    }
-    .loading #content {
-      opacity: 0.8;
-      visibility: hidden;
-    }
-    .loading #loader {
-      display: flex;
-    }
-    
-    /* Loader styles */
-    #loader {
-      display: none; /* Hide loader by default */
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .loader {
-      border: 16px solid #f3f3f3; /* Light grey */
-      border-top: 16px solid #3498db; /* Blue */
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      animation: spin 2s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .loader-text {
-      margin-top: 15px;
-      font-size: 1.2em;
-      color: #3498db;
-    }
-  </style> -->
-          <!-- Loader Section -->
-        <div id="loader">
-          <center>
-            <div class="loader"></div>
-          </center>
-          <div class="loader-text">Loading Please Wait...</div>
-        </div>
-            <div class="container">
-              
-              {%if not check_internet%}
-              <div class="alert alert-warning" style="background-color: rgb(230, 216, 143);">
-                  <strong><i class="fa fa-exclamation" aria-hidden="true"></i>   No Internet Connection.</strong>   Features like Grammar Checker and Speech to Text may not work
-              </div>
-              {%endif%}
-                <div class="page-inner">
-                  
-                    <div class="row">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">Create Braille</div>
-                            </div>
-                            <div class="card-body">
-                            
-                                <form method="post">
-                                    {%csrf_token%}
-                                    <div class="form-group">
-                                        <label for="title">Title:</label>
-                                        <input type="text" class="form-control mb-4" name="title" placeholder="Enter Title" required />
-                                        <div class="col">
-                                            <label for="comment">Type Content or use the Text to Speech below: </label>
-                                            <div class="speaker"
-                                                style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
-                                                <p id="action" style="color: grey;font-weight: 800; padding: 0; padding-left: 2rem;"></p>
-                                                <button type="button" onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
-                                                    <i class="fa fa-microphone" aria-hidden="true"></i> Speak
-                                                </button>
-                                            </div>
-                                        </div>
-                            
-                                    </div>
-                                    <textarea name="braille_draft" class="form-control" minlength="0" maxlength="250"
-                                        placeholder="Type Something..." id="content" rows="5" required></textarea>
-                            </div>
-                            
-                                      <div class="card-action">
-                                        <button type="button" id="grammar_btn" class="btn btn-info mr-4">Grammar Checker</button>
-                                        <button type="submit" id="submit_btn" class="btn btn-primary mr-4">Submit</button>
-                                        <!-- <button class="btn btn-danger mr-4">Cancel</button> -->
-                                      </div>
-                                </form>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            </div>
+        </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <!-- ORIGINAL CODE -->
-        
-        <script>
-          runSpeechRecog = () => {
-              var txt_content = document.getElementById("content");
-              txt_content.placeholder = "Loading text...";
-              txt_content.readOnly = true;
-              
-              var output = document.getElementById('content');
-              var action = document.getElementById('action');
-              let recognization = new webkitSpeechRecognition() || SpeechRecognition();
-              recognization.interimResults = true;
-              recognization.onstart = () => {
-                action.placeholder = "Listening...";
-              }
-              recognization.onresult = (e) => {
-                var transcript = e.results[0][0].transcript;
-                output.innerHTML = transcript;
-                output.classList.remove("hide")
-                action.innerHTML = "";
-                txt_content.readOnly = false;
-                txt_content.placeholder = "Type Something...";
+<!-- ORIGINAL CODE -->
 
-              }
-              recognization.onerror = (e) => {
-                  console.error("Speech recognition error", e);
-                  txt_content.readOnly = false;
-                  txt_content.placeholder = "Type Something...";
+<!-- <script>
+  runSpeechRecog = () => {
+      var txt_content = document.getElementById("content");
+      txt_content.placeholder = "Loading text...";
+      txt_content.readOnly = true;
+      
+      var output = document.getElementById('content');
+      var action = document.getElementById('action');
+      let recognization = new webkitSpeechRecognition() || SpeechRecognition();
+      recognization.interimResults = true;
+      recognization.onstart = () => {
+        action.placeholder = "Listening...";
+      }
+      recognization.onresult = (e) => {
+        var transcript = e.results[0][0].transcript;
+        output.innerHTML = transcript;
+        output.classList.remove("hide")
+        action.innerHTML = "";
+        txt_content.readOnly = false;
+        txt_content.placeholder = "Type Something...";
+
+      }
+      recognization.onerror = (e) => {
+          console.error("Speech recognition error", e);
+          txt_content.readOnly = false;
+          txt_content.placeholder = "Type Something...";
+      };
+      recognization.start();
+  }
+</script> -->
+
+<script>
+  let mediaRecorder;
+  let audioChunks = [];
+
+  document.getElementById('startButton').addEventListener('click', () => {
+      // Clear and make the text area read-only
+      const transcriptionArea = document.getElementById('content');
+      transcriptionArea.value = '';
+      transcriptionArea.readOnly = true;
+      transcriptionArea.classList.remove('hidden'); // Ensure text area is visible when starting recording
+
+      navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+              mediaRecorder = new MediaRecorder(stream);
+              mediaRecorder.ondataavailable = event => {
+                  audioChunks.push(event.data);
               };
-              recognization.start();
-          }
-        </script>
-        
-    
-            {% endblock %}
+              mediaRecorder.onstop = () => {
+                  const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                  const audioUrl = URL.createObjectURL(audioBlob);
+                  document.getElementById('audioPlayback').src = audioUrl;
+                  uploadAudio(audioBlob); // Upload audio to the server
+                  audioChunks = []; // Clear audio chunks for next recording
+              };
+              mediaRecorder.start();
+              document.getElementById('startButton').disabled = true;
+              document.getElementById('stopButton').disabled = false;
+          })
+          .catch(error => {
+              console.error('Error accessing the microphone:', error);
+          });
+  });
+
+  document.getElementById('stopButton').addEventListener('click', () => {
+      if (mediaRecorder) {
+          mediaRecorder.stop();
+          document.getElementById('startButton').disabled = false;
+          document.getElementById('stopButton').disabled = true;
+
+          // Show loader, hide text area, and show processing message
+          document.getElementById('content').classList.add('hidden');
+          const transcriptionArea = document.getElementById('content');
+          transcriptionArea.readOnly = false; // Make it editable again
+      }
+  });
+
+  function uploadAudio(audioBlob) {
+      const formData = new FormData();
+      formData.append('audio', audioBlob);
+      
+      fetch('/upload_audio/', {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin' // Ensure the session is maintained
+      })
+      .then(response => response.json())
+      .then(data => {
+          // Hide loader and processing message, show text area
+          document.getElementById('content').value = data.transcription;
+          document.getElementById('content').classList.remove('hidden');
+      })
+      .catch(error => {
+          console.error('Error uploading audio:', error);
+          // Hide loader and processing message, show text area in case of error
+          document.getElementById('content').classList.remove('hidden');
+      });
+  }
+</script>
+
+    {% endblock %}
