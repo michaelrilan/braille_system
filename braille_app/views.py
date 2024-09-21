@@ -115,9 +115,7 @@ def check_text(text):
     return(corrected_text)
 
 
-
-
-
+        
 @csrf_exempt
 def grammar_check(request):
     if request.method == 'POST':
@@ -335,13 +333,16 @@ def view_braille(request):
                         print(f"Error creating document: {e}")
                 
                 try:
+                    
                     return redirect('download_braille', file_name= filename) 
+                
                 except Exception as e:
                     print(f"Error during download redirection: {e}")
 
 
             # EDIT BRAILLE FUNCTION
-            elif form_type == 'edit_braille':
+            
+            if form_type == 'edit_braille':
                 braille_id = request.POST.get('braille_id')
                 braille_draft = request.POST.get('braille_draft')
                 braille_text = convert_to_braille(braille_draft)
@@ -436,15 +437,24 @@ def view_braille(request):
     return render(request, 'view_braille.html',context)
 
 
-
 @login_required(login_url='login')
 def download_braille(request, file_name):
     file_path = os.path.join('static/documents', file_name)
-    with open(file_path, 'rb') as doc_file:
-        response = HttpResponse(doc_file.read(), content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-        response['Content-Disposition'] = f'attachment; filename={file_name}'
-        return response
+    print(file_path)
 
+    # Check if the file exists before attempting to open it
+    if not os.path.isfile(file_path):
+        return HttpResponse(status=404)  # Return a 404 if the file is not found
+
+    with open(file_path, 'rb') as doc_file:
+        response = HttpResponse(
+            doc_file.read(),
+            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        response['Cache-Control'] = 'no-cache'
+        return response
+    
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

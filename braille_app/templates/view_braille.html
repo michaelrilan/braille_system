@@ -1,6 +1,7 @@
 
 
 {% extends "basemain.html" %}
+{%load static%}
 {% block title %} View Braille -- {% endblock %}
 
 {% block content %}
@@ -46,7 +47,7 @@
                                                         {%csrf_token%}
                                                         <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
                                                         <input type="text" name="filename" value={{bf.filename}} style="display: none;">
-                                                        <button type="submit" name="form_type" value="download_braille" name="form_type" class="btn btn-round btn-sm btn-primary"> <i class="fa fa-download" aria-hidden="true"></i></button>
+                                                        <button type="submit" name="form_type" value="download_braille" class="btn btn-round btn-sm btn-primary"> <i class="fa fa-download" aria-hidden="true"></i></button>
                                                     </form>
                                                 </td>
                                                 <td>
@@ -121,36 +122,6 @@
                                                             <h5 class="modal-title" id="exampleModalLabel">Share Modal</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <!-- <form method="post" name="share_braille">
-                                                                {%csrf_token%}
-                                                                <div class="modal-body">
-                                                                   
-                                                                        <input type="text" name="braille_id" id="" value="{{ bf.id }}"  style="display: none;">
-                                                                        <label for="UsernameOptions">Type the username and click Add:</label>
-                                                                        
-                                                                        <div class="mb-3">
-                                                                            <input type="text" class="form-control" list="UsernameOptions" id="UsernameInput">
-                                                                            <datalist id="UsernameOptions">
-                                                                                {% for profile in usernames %}
-                                                                                    <option value="{{ profile.user.username }}">  
-                                                                                {% endfor %}
-
-                                                                              </datalist>
-                                                                        <button type="button" id="addButton" class="btn-round btn-sm"> <i class="fa fa-plus" aria-hidden="true"></i>Add</button>
-
-                                                                        </div>
-
-                                                                        
-                                                                        <div class="mb-3">
-                                                                            <label for="UsernameList">List of Usernames: </label> 
-                                                                            <input type="text" name="usernames" class="form-control" id="UsernameList" name="username_list" value="" >
-                                                                        </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" name="form_type" value="share_braille" class="btn btn-primary">Share</button>
-                                                                </div>
-                                                            </form> -->
                                                             <form method="post" name="share_braille">
                                                                 {% csrf_token %}
                                                                 <div class="modal-body">
@@ -199,44 +170,7 @@
                     </div>
                 </div>
             </div>
-
             <script>
-                // const addButton = document.getElementById('addButton');
-                // const UsernameInput = document.getElementById('UsernameInput');
-                // const UsernameList = document.getElementById('UsernameList');
-                // // Function to clean up the sample input if part of the text is altered
-                // function cleanUpInput() {
-                //     const currentValue = UsernameList.value;
-                //     const options = [...document.querySelectorAll('#UsernameOptions option')].map(option => option.value);
-                //     let updatedValue = '';
-            
-                //     currentValue.split(';').forEach(item => {
-                //         const trimmedItem = item.trim();
-                //         if (trimmedItem && options.includes(trimmedItem)) {
-                //             updatedValue += trimmedItem + '; ';
-                //         }
-                //     });
-            
-                //     UsernameList.value = updatedValue.trim();
-                // }
-            
-                // addButton.addEventListener('click', function() {
-                //     const selectedValue = UsernameInput.value;
-                //     const options = [...document.querySelectorAll('#UsernameOptions option')].map(option => option.value);
-            
-                //     // Only add if the selected value exists in the datalist options
-                //     if (options.includes(selectedValue) && !UsernameList.value.includes(selectedValue)) {
-                //         UsernameList.value += selectedValue + '; ';
-                //     }
-            
-                //     // Clear the UsernameInput for next entry
-                //     UsernameInput.value = '';
-                // });
-            
-                // // Listen for changes to the sample input
-                // UsernameList.addEventListener('input', function() {
-                //     cleanUpInput();
-                // });
                 document.querySelectorAll('[id^="addButton"]').forEach(function(addButton) {
                 const bfId = addButton.id.replace('addButton', ''); // Extract the id from the button's id
                 const UsernameInput = document.getElementById('UsernameInput' + bfId);

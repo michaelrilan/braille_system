@@ -23,28 +23,30 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.2); /* Light dim */
-    backdrop-filter: blur(5px); /* Adds blur to the background */
-    z-index: 1000; /* Right below the loader, but above everything else */
+    background: rgba(255, 255, 255, 0.1); /* Light dim */
+    backdrop-filter: blur(2px); /* Adds blur to the background */
+    z-index: 1099; /* Right below the loader, but above everything else */
     display: none; /* Hidden by default */
 }
 
 /* Spinning loader */
 .loader {
-    border: 16px solid rgba(0, 0, 0, 0.1); /* Light grey border */
-    border-top: 16px solid #3498db; /* Blue border on top for the spinning effect */
+    border: 25px solid rgba(0, 0, 0, 0.1); /* Light grey border */
+    border-top: 25px solid #055081; /* Blue border on top for the spinning effect */
     border-radius: 50%;
-    width: 120px;
-    height: 120px;
+    width: 600px;
+    height: 600px;
     animation: spin 1.5s linear infinite;
 }
 
 /* Text under the loader */
 .loader-text {
+
     margin-top: 15px;
     font-size: 1.5em;
-    color: #3498db;
+    color: #0852b3;
     font-family: 'Arial', sans-serif;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Adjust the shadow size and color */
 }
 
 /* Spinning animation */
