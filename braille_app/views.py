@@ -24,7 +24,7 @@ from pydub import AudioSegment
 import speech_recognition as sr
 import socket
 import logging
-
+import shutil
 logger = logging.getLogger(__name__)
 
 def check_internet_connection():
@@ -371,19 +371,54 @@ def view_braille(request):
             form_type = request.POST.get('form_type')
 
             # DOWNLOAD BRAILLE FUNCTION
+            # if form_type == 'download_braille':
+            #     print('download')
+            #     braille_id = request.POST.get('braille_id')
+            #     filename = request.POST.get('filename')
+            #     documents_dir = 'static/documents'
+            #     fetch_braille = BrailleInfo.objects.get(id=braille_id,deleteflag = False)
+            #     title = fetch_braille.title
+            #     braille_text = fetch_braille.braille_text
+            #     braille_draft = fetch_braille.braille_draft
+
+            #     if not os.path.exists(documents_dir):
+            #         os.makedirs(documents_dir)
+            #     file_path = os.path.join(documents_dir, filename)
+            #     # Check if the file exists, if not, recreate it
+            #     if not os.path.exists(file_path):
+            #         try:
+            #             # Create and save the document
+            #             document = Document()
+            #             document.add_heading(title, level=1)
+            #             document.add_paragraph(braille_text)
+            #             document.add_paragraph(braille_draft)
+            #             document.save(file_path)
+            #         except Exception as e:
+            #             print(f"Error creating document: {e}")
+                
+            #     try:
+                    
+            #         return redirect('download_braille', file_name= filename) 
+                
+            #     except Exception as e:
+            #         print(f"Error during download redirection: {e}")
             if form_type == 'download_braille':
                 print('download')
                 braille_id = request.POST.get('braille_id')
                 filename = request.POST.get('filename')
                 documents_dir = 'static/documents'
-                fetch_braille = BrailleInfo.objects.get(id=braille_id,deleteflag = False)
+                
+                fetch_braille = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
                 title = fetch_braille.title
                 braille_text = fetch_braille.braille_text
                 braille_draft = fetch_braille.braille_draft
 
+                # Create the documents directory if it doesn't exist
                 if not os.path.exists(documents_dir):
                     os.makedirs(documents_dir)
+
                 file_path = os.path.join(documents_dir, filename)
+
                 # Check if the file exists, if not, recreate it
                 if not os.path.exists(file_path):
                     try:
@@ -395,14 +430,21 @@ def view_braille(request):
                         document.save(file_path)
                     except Exception as e:
                         print(f"Error creating document: {e}")
-                
-                try:
-                    
-                    return redirect('download_braille', file_name= filename) 
-                
-                except Exception as e:
-                    print(f"Error during download redirection: {e}")
 
+                try:
+                    # Determine the user's Downloads directory
+                    downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+                    destination_path = os.path.join(downloads_dir, filename)
+
+                    # Copy the file to the Downloads directory
+                    shutil.copy(file_path, destination_path)
+                    print(f"File copied to: {destination_path}")
+                    messages.success(request,"File Downloaded Successfully")
+                    # Optionally, you can also return a success message or redirect
+                    return redirect('view_braille')  # Adjust this to your success view
+                except Exception as e:
+                    print(f"Error during file copy: {e}")
+                    
 
             # EDIT BRAILLE FUNCTION
             
@@ -661,14 +703,18 @@ def shared(request):
             braille_id = request.POST.get('braille_id')
             filename = request.POST.get('filename')
             documents_dir = 'static/documents'
-            fetch_braille = BrailleInfo.objects.get(id=braille_id,deleteflag = False)
+            
+            fetch_braille = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
             title = fetch_braille.title
             braille_text = fetch_braille.braille_text
             braille_draft = fetch_braille.braille_draft
 
+            # Create the documents directory if it doesn't exist
             if not os.path.exists(documents_dir):
                 os.makedirs(documents_dir)
+
             file_path = os.path.join(documents_dir, filename)
+
             # Check if the file exists, if not, recreate it
             if not os.path.exists(file_path):
                 try:
@@ -682,9 +728,18 @@ def shared(request):
                     print(f"Error creating document: {e}")
 
             try:
-                return redirect('download_braille', file_name= filename) 
+                # Determine the user's Downloads directory
+                downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+                destination_path = os.path.join(downloads_dir, filename)
+
+                # Copy the file to the Downloads directory
+                shutil.copy(file_path, destination_path)
+                print(f"File copied to: {destination_path}")
+                messages.success(request,"File Downloaded Successfully")
+                # Optionally, you can also return a success message or redirect
+                return redirect('shared')  # Adjust this to your success view
             except Exception as e:
-                print(f"Error during download redirection: {e}")
+                print(f"Error during file copy: {e}")
     else:
          return redirect('login')
    
