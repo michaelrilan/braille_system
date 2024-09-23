@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 
@@ -9,11 +10,20 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="static/credentials/css/style.css">
+    <link rel="stylesheet" href="static/main/assets/css/styles.css">
 </head>
 
 <body>
     <section class="ftco-section">
         <div class="container">
+            <!-- Blurred background overlay -->
+            <div id="loader-overlay"></div>
+            
+            <!-- Loader itself -->
+            <div id="loader">
+                
+                <div class="loader-text">Loading Please Wait...</div>
+            </div>
             <div class="row justify-content-center">
             </div>
             <div class="row justify-content-center">
@@ -58,6 +68,8 @@
     <script src="static/credentials/js/main.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="static/main/assets/js/scripts.js"></script>
+
     <script defer
         src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
         integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
