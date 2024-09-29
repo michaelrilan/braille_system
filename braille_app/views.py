@@ -16,9 +16,11 @@ from textblob import TextBlob
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_control
+from django.shortcuts import get_object_or_404
 from docx import Document
 import requests
 import random
+
 import string
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -365,8 +367,10 @@ def create_braille(request):
 @login_required(login_url='login')
 def view_braille(request):
     current_date = datetime.now().strftime('%Y%m%d_%H%M%S')  # Format the date as YYYYMMDD
-    user_id = request.user.id
+    
     if request.user.is_authenticated:
+        user_id = request.user.id
+        user_profile = get_object_or_404(UserProfile, user_id=user_id)
         if request.method == 'POST':
             form_type = request.POST.get('form_type')
 
@@ -536,7 +540,8 @@ def view_braille(request):
 
 
         context = {'braille_infos': braille_infos,
-                   'usernames': usernames
+                   'usernames': usernames,
+                   'is_faculty': user_profile.is_faculty
                    }
     else: 
         return redirect('login')

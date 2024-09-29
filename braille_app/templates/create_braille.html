@@ -143,27 +143,61 @@
       }
   });
 
-  function uploadAudio(audioBlob) {
-      const formData = new FormData();
-      formData.append('audio', audioBlob);
+//   function uploadAudio(audioBlob) {
+//       const formData = new FormData();
+//       formData.append('audio', audioBlob);
       
-      fetch('/upload_audio/', {
-          method: 'POST',
-          body: formData,
-          credentials: 'same-origin' // Ensure the session is maintained
-      })
-      .then(response => response.json())
-      .then(data => {
-          // Hide loader and processing message, show text area
-          document.getElementById('content').value = data.transcription;
-          document.getElementById('content').classList.remove('hidden');
-      })
-      .catch(error => {
-          console.error('Error uploading audio:', error);
-          // Hide loader and processing message, show text area in case of error
-          document.getElementById('content').classList.remove('hidden');
-      });
-  }
+//       fetch('/upload_audio/', {
+//           method: 'POST',
+//           body: formData,
+//           credentials: 'same-origin' // Ensure the session is maintained
+//       })
+//       .then(response => response.json())
+//       .then(data => {
+//           // Hide loader and processing message, show text area
+//           document.getElementById('content').value = data.transcription;
+//           document.getElementById('content').classList.remove('hidden');
+//       })
+//       .catch(error => {
+//           console.error('Error uploading audio:', error);
+//           // Hide loader and processing message, show text area in case of error
+//           document.getElementById('content').classList.remove('hidden');
+//       });
+//   }
+    function uploadAudio(audioBlob) {
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+
+        fetch('/upload_audio/', {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin' // Ensure the session is maintained
+        })
+        .then(response => {
+            if (!response.ok) {
+                // If the status is 400 or 500, show the placeholder message
+                if (response.status === 400 || response.status === 500) {
+                    document.getElementById('content').placeholder = 
+                        "Sorry, I can't catch your voice at the moment, please try again later.";
+                    document.getElementById('content').value = ''; // Clear any existing text
+                    document.getElementById('content').classList.remove('hidden');
+                }
+                throw new Error('Error uploading audio');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Hide loader and processing message, show transcription text
+            document.getElementById('content').value = data.transcription;
+            document.getElementById('content').classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Hide loader and processing message, show text area in case of error
+            document.getElementById('content').classList.remove('hidden');
+        });
+    }
+
 </script>
 
     {% endblock %}
