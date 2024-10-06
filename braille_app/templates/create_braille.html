@@ -47,8 +47,9 @@
                                 </div>
                     
                             </div>
-                            <textarea name="braille_draft" class="form-control" minlength="0" maxlength="250"
-                                placeholder="Type Something..." id="content" rows="5" required></textarea>
+                            <textarea name="braille_draft" class="form-control" minlength="1"
+                                placeholder="Type Something..." id="content" rows="10" required onkeyup="checkTextLength()"></textarea>
+                                <p id="charWarning" style="color: red; display: none;"> Character limit exceeded. Grammar Checker is disabled.</p>
                     </div>
                     
                               <div class="card-action">
@@ -197,6 +198,28 @@
             document.getElementById('content').classList.remove('hidden');
         });
     }
+
+</script>
+
+<script>
+    function checkTextLength() {
+    var content = document.getElementById("content").value;
+    var grammarBtn = document.getElementById("grammar_btn");
+    var charWarning = document.getElementById("charWarning");
+
+    // Check if the text length (including spaces) exceeds 100
+    if (content.length > 100) {
+        // Show warning message
+        charWarning.style.display = "block";
+        // Disable Grammar Checker button
+        grammarBtn.disabled = true;
+    } else {
+        // Hide warning message
+        charWarning.style.display = "none";
+        // Enable Grammar Checker button
+        grammarBtn.disabled = false;
+    }
+}
 
 </script>
 

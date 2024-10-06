@@ -52,7 +52,7 @@
                                                             <input type="text" name="filename" value={{bf.filename}} style="display: none;">
                                                             <button type="submit" name="form_type" value="download_braille" class="btn btn-round btn-sm btn-primary"> <i
                                                                     class="fa fa-download" aria-hidden="true"></i></button>
-                                                            <button type="button" class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#edit{{ bf.id }}"><i
+                                                            <button type="button" class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#preview{{ bf.id }}"><i
                                                                     class="fa fa-eye" aria-hidden="true"></i></button>
                                                         </form>
                                                     
@@ -66,7 +66,50 @@
                                                         <button class="btn btn-round btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#share{{ bf.id }}" ><i class="fa fa-share" aria-hidden="true"></i></button>
                                                     {% else %}
                                                     {% endif %}
-                                                    
+
+                                                    <!-- Preview Modal -->
+                                                    <div class="modal fade " id="preview{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-scrollable">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Preview Braille Content</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="container-fluid">
+                                                                        <div class="row">
+                                                                            <div class="text-center pb-4">
+                                                                                <h3>Title: {{ bf.title }}</h3>
+                                                                            </div>
+
+                                                                            <div class="row">
+                                                                                <h4>Content: </h4>
+                                                                                <div class="container-md">
+                                                                                    <p class="text-center mt-3">
+                                                                                        {{ bf.braille_draft }}
+                                                                                        
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row mt-4">
+                                                                                <h4>Equivalent to Braille: </h4>
+                                                                                <div class="container-md">
+                                                                                    <p class="text-center mt-3">
+                                                                                        {{ bf.braille_text|join:"   " }}
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                  </div>
+                                                                  <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                                  </div>
+                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     
                                                     <!-- Edit Modal -->
                                                     <div class="modal fade" id="edit{{ bf.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
