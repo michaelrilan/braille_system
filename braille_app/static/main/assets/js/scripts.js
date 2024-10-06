@@ -41,10 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loader.style.display = 'block'; // Show the loader
         overlay.style.display = 'block'; // Show the blurred overlay
         document.body.classList.add('loading'); // Add 'loading' class to body for blurring content
-        setTimeout(() => {
-            // Here you would normally handle the download logic
-            hideLoader(); // Hide loader after download logic
-        }, 5000); // 5 seconds delay
+
+        // Perform download or other logic here if needed, or hideLoader will be called elsewhere
     }
 
     function hideLoader() {
@@ -55,23 +53,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Example: Show loader when form is submitted
     document.querySelectorAll('form').forEach(form => {
-        // form.addEventListener('submit', function() {
         form.addEventListener('submit', function(event) {
             if (form.id === 'download_braille') {
                 console.log('download_detected')
                 hideLoader(); // Hide loader after download logic
-                    
-                    
-            }else{
+            } else {
                 showLoader();
-
-                console.log('asvsdff')
-
             }
         });
     });
 
-    // Example: Show loader on page navigation or refresh
+    // Example: Hide loader on page load
     window.addEventListener('load', function() {
         hideLoader();
     });
@@ -82,3 +74,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
