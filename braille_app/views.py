@@ -18,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_control
 from django.shortcuts import get_object_or_404
 from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 import requests
 import random
 
@@ -336,17 +338,57 @@ def create_braille(request):
                     )
                 created_id = braille_instance.id
                 # Ensure the directory exists
+                # documents_dir = 'static/documents'
+                # if not os.path.exists(documents_dir):
+                #     os.makedirs(documents_dir)
+
+                # document = Document()
+                # document.add_heading(title, level=1)
+                # document.add_paragraph(braille_text)
+                # document.add_paragraph(braille_draft)
+
+                # file_path = os.path.join('static/documents', filename)
+                # document.save(file_path)
+
+
+                # Set up the directory for saving documents
                 documents_dir = 'static/documents'
                 if not os.path.exists(documents_dir):
                     os.makedirs(documents_dir)
 
+                # Create a new document
                 document = Document()
-                document.add_heading(title, level=1)
-                document.add_paragraph(braille_text)
-                document.add_paragraph(braille_draft)
 
-                file_path = os.path.join('static/documents', filename)
+                # Add title with font size 15 and center alignment
+                title_paragraph = document.add_heading(title, level=1)
+                title_run = title_paragraph.runs[0]
+                title_run.font.size = Pt(15)
+                title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                # Add space below the title (1 line break)
+                for _ in range(1):
+                    document.add_paragraph()  # Add empty paragraphs for spacing
+
+                # Modify 'braille_text' to add 3 spaces between each character
+                braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                # Add braille_text with font size 22
+                para_braille = document.add_paragraph()
+                run_braille = para_braille.add_run(braille_text_spaced)
+                font_braille = run_braille.font
+                font_braille.size = Pt(22)
+
+                # Add braille_draft with font size 22
+                para_draft = document.add_paragraph()
+                run_draft = para_draft.add_run(braille_draft)
+                font_draft = run_draft.font
+                font_draft.size = Pt(22)
+
+                # Define the file path and save the document
+                file_path = os.path.join(documents_dir, filename)
                 document.save(file_path)
+
+
                 activity_history = ActivityHistory(user_id = user_id,activity_log="Created a New Braille File(File # " +str(created_id) + ")")
                 activity_history.save()
 
@@ -426,11 +468,36 @@ def view_braille(request):
                 # Check if the file exists, if not, recreate it
                 if not os.path.exists(file_path):
                     try:
-                        # Create and save the document
+                        # Create a new document
                         document = Document()
-                        document.add_heading(title, level=1)
-                        document.add_paragraph(braille_text)
-                        document.add_paragraph(braille_draft)
+
+                        # Add title with font size 15 and center alignment
+                        title_paragraph = document.add_heading(title, level=1)
+                        title_run = title_paragraph.runs[0]
+                        title_run.font.size = Pt(15)
+                        title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                        # Add space below the title (1 line break)
+                        for _ in range(1):
+                            document.add_paragraph()  # Add empty paragraphs for spacing
+
+                        # Modify 'braille_text' to add 3 spaces between each character
+                        braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                        # Add braille_text with font size 22
+                        para_braille = document.add_paragraph()
+                        run_braille = para_braille.add_run(braille_text_spaced)
+                        font_braille = run_braille.font
+                        font_braille.size = Pt(22)
+
+                        # Add braille_draft with font size 22
+                        para_draft = document.add_paragraph()
+                        run_draft = para_draft.add_run(braille_draft)
+                        font_draft = run_draft.font
+                        font_draft.size = Pt(22)
+
+                        # Define the file path and save the document
+                        file_path = os.path.join(documents_dir, filename)
                         document.save(file_path)
                     except Exception as e:
                         print(f"Error creating document: {e}")
@@ -458,13 +525,53 @@ def view_braille(request):
                 braille_text = convert_to_braille(braille_draft)
                 title = request.POST.get('title')
                 braille_info = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+
                 document = Document()
-                document.add_heading(title, level=1)
-                document.add_paragraph(braille_text)
-                document.add_paragraph(braille_draft)
+
+                # Add title with font size 15 and center alignment
+                title_paragraph = document.add_heading(title, level=1)
+                title_run = title_paragraph.runs[0]
+                title_run.font.size = Pt(15)
+                title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                # Add space below the title (3 line breaks)
+                for _ in range(3):
+                    document.add_paragraph()  # Add empty paragraphs for spacing
+
+                # Modify 'braille_text' to add 3 spaces between each character
+                braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                # Add braille_text with font size 22
+                para_braille = document.add_paragraph()
+                run_braille = para_braille.add_run(braille_text_spaced)
+                font_braille = run_braille.font
+                font_braille.size = Pt(22)
+
+                # Add braille_draft with font size 22
+                para_draft = document.add_paragraph()
+                run_draft = para_draft.add_run(braille_draft)
+                font_draft = run_draft.font
+                font_draft.size = Pt(22)
+
+                # Define the filename and save the document
                 filename = f'{user_id}_{title.replace(" ", "_")}_{current_date}.docx'
                 file_path = os.path.join('static/documents', filename)
                 document.save(file_path)
+
+
+                # braille_id = request.POST.get('braille_id')
+                # braille_draft = request.POST.get('braille_draft')
+                # braille_text = convert_to_braille(braille_draft)
+                # title = request.POST.get('title')
+                # braille_info = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+                
+                # document = Document()
+                # document.add_heading(title, level=1)
+                # document.add_paragraph(braille_text)
+                # document.add_paragraph(braille_draft)
+                # filename = f'{user_id}_{title.replace(" ", "_")}_{current_date}.docx'
+                # file_path = os.path.join('static/documents', filename)
+                # document.save(file_path)
 
                 braille_info.filename = filename
                 braille_info.braille_draft = braille_draft
@@ -724,10 +831,42 @@ def shared(request):
             if not os.path.exists(file_path):
                 try:
                     # Create and save the document
+                    # document = Document()
+                    # document.add_heading(title, level=1)
+                    # document.add_paragraph(braille_text)
+                    # document.add_paragraph(braille_draft)
+                    # document.save(file_path)
+
+                    # Create a new document
                     document = Document()
-                    document.add_heading(title, level=1)
-                    document.add_paragraph(braille_text)
-                    document.add_paragraph(braille_draft)
+
+                    # Add title with font size 15 and center alignment
+                    title_paragraph = document.add_heading(title, level=1)
+                    title_run = title_paragraph.runs[0]
+                    title_run.font.size = Pt(15)
+                    title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                    # Add space below the title (1 line break)
+                    for _ in range(1):
+                        document.add_paragraph()  # Add empty paragraphs for spacing
+
+                    # Modify 'braille_text' to add 3 spaces between each character
+                    braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                    # Add braille_text with font size 22
+                    para_braille = document.add_paragraph()
+                    run_braille = para_braille.add_run(braille_text_spaced)
+                    font_braille = run_braille.font
+                    font_braille.size = Pt(22)
+
+                    # Add braille_draft with font size 22
+                    para_draft = document.add_paragraph()
+                    run_draft = para_draft.add_run(braille_draft)
+                    font_draft = run_draft.font
+                    font_draft.size = Pt(22)
+
+                    # Define the file path and save the document
+                    file_path = os.path.join(documents_dir, filename)
                     document.save(file_path)
                 except Exception as e:
                     print(f"Error creating document: {e}")
