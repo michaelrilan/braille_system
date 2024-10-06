@@ -1,0 +1,68 @@
+{% extends "basemain.html" %}
+{% block title %} Shared to me -- {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Shared Braille</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="basic-datatables" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>File ID</th>
+                                                <th>Title</th>
+                                                <th>Shared by</th>
+                                                <th>Date shared</th>
+                                                <th>Download</th>
+                                
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>File ID</th>
+                                                <th>Title</th>
+                                                <th>Shared by</th>
+                                                <th>Date shared</th>
+                                                <th>Download</th>
+                                                
+                                                
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+
+                                           {%for entry in shared_braille_entries%}
+                                           {%if entry.braille_info.deleteflag == True %}
+                                           {%else%}
+                                            <tr>
+                                                <td>{{entry.braille_info.id}}</td>
+                                                <td>{{entry.braille_info.title}}</td>
+                                                <td>{{entry.user.first_name}} {{entry.user.last_name}}</td>
+                                                <td>{{entry.date_shared}}</td>
+                                                <td>
+                                                    <form method="post" id="download_braille">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="braille_id" value="{{ entry.braille_info.id }}" style="display: none;">
+                                                        <input type="text" name="filename" value="{{ entry.braille_info.filename }}" style="display: none;">
+                                                        <button type="submit" name="form_type" value="download_braille" class="btn btn-round btn-sm btn-primary">
+                                                            <i class="fa fa-download" aria-hidden="true"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {%endif%}
+                                            {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
