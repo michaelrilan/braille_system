@@ -13,6 +13,8 @@ urlpatterns = [
     path("archives", views.archives, name="archives"),
     path('manage_account',views.manage_account, name='manage_account'),
     path("shared", views.shared, name="shared"),
+    path("shared_braille", views.shared_braille, name="shared_braille"),
+
     path("account_settings", views.account_settings, name="account_settings"),
     path("logout_user", views.logout_user, name="logout_user"),
     path('grammar_check/',views.grammar_check, name='grammar_check'),

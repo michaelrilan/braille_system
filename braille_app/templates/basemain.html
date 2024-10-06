@@ -105,12 +105,24 @@
                         </li>
                         
 
-                        <li class="nav-item mb-3">
-                            <a href="{% url 'shared' %}">
-                                <i class="fa fa-users"></i>
-                                <p>Shared to me</p>
-                            </a>
-                        </li>
+                        
+                        {% if user_profile.is_faculty%}
+                            <li class="nav-item mb-3">
+                                <a href="{% url 'shared_braille' %}">
+                                    <i class="fa fa-users"></i>
+                                    <p>Shared Braille</p>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item mb-3">
+                                <a href="{% url 'shared' %}">
+                                    <i class="fa fa-users"></i>
+                                    <p>Shared to me</p>
+                                </a>
+                            </li>
+                        {%endif%}
+
+                        
 
                         <li class="nav-item mb-3">
                             <a href="{% url 'archives' %}">

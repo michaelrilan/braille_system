@@ -806,6 +806,9 @@ def manage_account(request):
     return render(request, 'manage_account.html',context)
 
 
+
+#THIS IS A STUDENT ACCESS FOR SHARED BRAILLE
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def shared(request):
@@ -893,6 +896,98 @@ def shared(request):
     # Prepare the context dictionary correctly
     context = {'shared_braille_entries': shared_braille_entries}
     return render(request, 'shared.html',context)
+
+
+
+
+#THIS IS AN ADMIN ACCESS FOR SHARED BRAILLE
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='login')
+def shared_braille(request):
+    if request.user.is_authenticated:
+       user_id = request.user.id
+       if request.method == 'POST':
+            braille_id = request.POST.get('braille_id')
+            filename = request.POST.get('filename')
+            documents_dir = 'static/documents'
+            
+            fetch_braille = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+            title = fetch_braille.title
+            braille_text = fetch_braille.braille_text
+            braille_draft = fetch_braille.braille_draft
+
+            # Create the documents directory if it doesn't exist
+            if not os.path.exists(documents_dir):
+                os.makedirs(documents_dir)
+
+            file_path = os.path.join(documents_dir, filename)
+
+            # Check if the file exists, if not, recreate it
+            if not os.path.exists(file_path):
+                try:
+                    # Create and save the document
+                    # document = Document()
+                    # document.add_heading(title, level=1)
+                    # document.add_paragraph(braille_text)
+                    # document.add_paragraph(braille_draft)
+                    # document.save(file_path)
+
+                    # Create a new document
+                    document = Document()
+
+                    # Add title with font size 15 and center alignment
+                    title_paragraph = document.add_heading(title, level=1)
+                    title_run = title_paragraph.runs[0]
+                    title_run.font.size = Pt(15)
+                    title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                    # Add space below the title (1 line break)
+                    for _ in range(1):
+                        document.add_paragraph()  # Add empty paragraphs for spacing
+
+                    # Modify 'braille_text' to add 3 spaces between each character
+                    braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                    # Add braille_text with font size 22
+                    para_braille = document.add_paragraph()
+                    run_braille = para_braille.add_run(braille_text_spaced)
+                    font_braille = run_braille.font
+                    font_braille.size = Pt(22)
+
+                    # Add braille_draft with font size 22
+                    para_draft = document.add_paragraph()
+                    run_draft = para_draft.add_run(braille_draft)
+                    font_draft = run_draft.font
+                    font_draft.size = Pt(22)
+
+                    # Define the file path and save the document
+                    file_path = os.path.join(documents_dir, filename)
+                    document.save(file_path)
+                except Exception as e:
+                    print(f"Error creating document: {e}")
+
+            try:
+                # Determine the user's Downloads directory
+                downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+                destination_path = os.path.join(downloads_dir, filename)
+
+                # Copy the file to the Downloads directory
+                shutil.copy(file_path, destination_path)
+                print(f"File copied to: {destination_path}")
+                messages.success(request,"File Downloaded Successfully")
+                # Optionally, you can also return a success message or redirect
+                return redirect('shared_braille')  # Adjust this to your success view
+            except Exception as e:
+                print(f"Error during file copy: {e}")
+    else:
+         return redirect('login')
+   
+    # Fetch SharedBraille entries where shared_to_user is the logged-in user
+    shared_braille_entries = SharedBraille.objects.select_related('user', 'shared_to_user', 'braille_info').filter(user_id=user_id)
+    
+    # Prepare the context dictionary correctly
+    context = {'shared_braille_entries': shared_braille_entries}
+    return render(request, 'shared_braille.html',context)
 
 
 
