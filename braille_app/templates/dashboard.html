@@ -24,8 +24,13 @@
                                         </div>
                                         <div class="col col-stats ms-3 ms-sm-0" >
                                             <div class="numbers">
-                                                <p class="card-category">Shared to me</p>
-                                                <h4 class="card-title">{{shared_to_me_count}}</h4>
+                                                {% if user_profile.is_faculty%}
+                                                    <p class="card-category">Shared Braille</p>
+                                                    <h4 class="card-title">{{shared_braille_entries}}</h4>
+                                                {%else%}
+                                                    <p class="card-category">Shared to me</p>
+                                                    <h4 class="card-title">{{shared_to_me_count}}</h4>
+                                                {%endif%}
                                             </div>
                                         </div>
                                     </div>
@@ -43,8 +48,11 @@
                                         </div>
                                         <div class="col col-stats ms-3 ms-sm-0">
                                             <div class="numbers">
+                                             
+
                                                 <p class="card-category">Braille Files</p>
                                                 <h4 class="card-title">{{braille_infos_count}}</h4>
+
                                             </div>
                                         </div>
                                     </div>

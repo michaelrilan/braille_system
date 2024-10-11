@@ -282,12 +282,14 @@ def dashboard(request):
         shared_to_me = SharedBraille.objects.filter(shared_to_user = user_id).count()
         archives = BrailleInfo.objects.filter(user_id = user_id,deleteflag=True).count()
         activity_history = ActivityHistory.objects.filter(user_id=user_id).order_by('-date_log')
+        shared_braille_entries = SharedBraille.objects.select_related('user', 'shared_to_user', 'braille_info').filter(user_id=user_id).count()
 
         print(archives)
         context = {
             'archives_count' : archives,
             'braille_infos_count': braille_infos_count,
             'shared_to_me_count': shared_to_me,
+            'shared_braille_entries': shared_braille_entries,
             'activity_history':activity_history
         }
     return render(request, 'dashboard.html',context)
