@@ -1,0 +1,13 @@
+{% extends "base_download.html" %}
+{% block title %} Download Braille -- {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-inner">
+            <p>Your braille file is ready for download.</p>
+            <a href="{% url 'download_confirm' %}" target="_blank" rel="noopener noreferrer">
+                Click here to download the file
+            </a>
+        </div>
+    </div>
+{% endblock %}

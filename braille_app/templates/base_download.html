@@ -1,0 +1,244 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>{% block title %}{% endblock %} - Braille Management System</title>
+    <link rel="icon" href="{% static '/main/assets/css/img/title_icon.png'%}" type="image/x-icon">
+    <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+
+    <!-- Fonts and icons -->
+    <script src="{% static '/main/assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/main/assets/css/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static '/main/assets/css/styles.css'%}">
+    <script>
+        WebFont.load({
+            google: {
+                "families": ["Public Sans:300,400,500,600,700"]
+            },
+            custom: {
+                "families": ["simple-line-icons"],
+                urls: ['static/main/assets/css/fonts.min.css']
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static '/main/assets/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static '/main/assets/css/plugins.min.css'%}">
+    <link rel="stylesheet" href="{% static '/main/assets/css/kaiadmin.min.css' %}">
+</head>
+
+<body>
+    
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                            <a href="{% url 'dashboard' %}" class="logo">
+                                <img src="{% static '/main/assets/css/img/title_icon.png' %}" alt="navbar brand" class="navbar-brand"
+                                height="90px">
+                                <h6 style="color: white; font-size: 14.5px;">Braille Management System</h6>
+                            </a>
+                        
+                        
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+
+                </div>
+                <!-- End Logo Header -->
+            </div>
+
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <!-- Logo Header -->
+                    <div class="logo-header" data-background-color="dark">
+
+                        <a href="{% url 'dashboard' %}" class="logo">
+                            <img src="{% static '/main/assets/css/img/title_icon.png' %}" alt="navbar brand" class="navbar-brand"
+                            height="80px">  
+
+                        </a>
+
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+
+                    </div>
+                    <!-- End Logo Header -->
+                </div>
+                <!-- Navbar Header -->
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+
+                    <div class="container-fluid">
+                        <!-- <img src="{% static '/main/assets/css/img/title_icon.png' %}" alt="navbar brand" class="navbar-brand"
+                                height="90px"> -->
+                        <h4>Noveleta Elementary School SPED</h4>
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            
+                            <li class="nav-item topbar-user dropdown hidden-caret">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
+                                    aria-expanded="false">
+
+                                    <span class="profile-username">
+                                        {% if user.is_authenticated %}
+                                        <span class="op-7">Hello,</span> <span class="fw-bold">{{user.first_name}} {{user.last_name}}</span> !
+                                        {%endif%}
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li>
+                                            <a class="dropdown-item" href="{% url 'account_settings' %}">Account Setting</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- End Navbar -->
+            </div>
+
+            
+            <!-- Blurred background overlay -->
+            <div id="loader-overlay"></div>
+            
+            <!-- Loader itself -->
+            <div id="loader">
+            <center>
+                <div class="loader"></div>
+            </center>
+                
+                <div class="loader-text">Loading Please Wait...</div>
+            </div>
+            {% block content %}{% endblock %}
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="copyright ms-auto">
+                        All Rights Reserved 2024</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+    </div>
+      <!-- Core JS Files   -->
+      <script src="{% static '/main/assets/js/core/jquery-3.7.1.min.js' %}"></script>
+      <script src="{% static '/main/assets/js/core/popper.min.js' %}"></script>
+      <script src="{% static '/main/assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static '/main/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+    <!-- Chart JS
+    <script src="static/main/assets/js/plugin/chart.js/chart.min.js"></script> -->
+
+    <!-- jQuery Sparkline -->
+    <script src="{% static '/main/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{% static '/main/assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+    <!-- Datatables -->
+
+    <script src="{% static '/main/assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+    <!-- Bootstrap Notify -->
+    <!-- <script src="static/main/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
+
+    <!-- jQuery Vector Maps -->
+    <script src="{% static '/main/assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+    <script src="{% static '/main/assets/js/plugin/jsvectormap/world.js' %}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{% static '/main/assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="{% static '/main/assets/js/kaiadmin.min.js' %}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+    <!-- LOADER -->
+    <script src="{% static '/main/assets/js/scripts.js' %}"></script>
+    <script src="{%static '/main/assets/js/events.js'%}"></script>
+
+
+    
+    <script>
+        $(document).ready(function() {
+            $("#basic-datatables").DataTable({});
+        });
+    </script>
+    {% if messages %}
+    {% for message in messages %}
+        {% if 'extra_info' in message.extra_tags %}
+        <script>
+            // Parse the JSON string into a JavaScript object
+            var messageData = JSON.parse('{{ message|escapejs }}');
+            Swal.fire({
+              position: 'center',
+              icon: 'success',  // You can customize the icon based on your tags or message type
+              title:'<h3>Account Added Successfully!<br></h3> <h5>Please see below for the details</h5><p>'+
+                '<br>'+ 'Full Name: ' + messageData.fullname + 
+                '<br>'+ 'Username: ' + messageData.username  +
+                '<br>'+ 'Initial Password: ' + messageData.initial_password,
+              showConfirmButton: true,
+              confirmButtonColor: '#3248a8',
+            });
+          </script>
+          
+
+        {%else%}
+            <script>
+                Swal.fire({
+                position: 'center',
+                icon: '{{message.tags}}',
+                title: '<h5>{{message}}</h5>\n',
+                showConfirmButton: true,
+                confirmButtonColor: '#3248a8',
+                
+                })
+            </script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+</body>
+
+
+
+</html>

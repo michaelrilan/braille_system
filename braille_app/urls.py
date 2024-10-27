@@ -7,6 +7,7 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("dashboard", views.dashboard, name="dashboard"),
     path("tutorial", views.tutorial, name="tutorial"),
+    path("download_confirm", views.download_confirm, name="download_confirm"),
     path("create_braille", views.create_braille, name="create_braille"),
     path('download_braille/<str:file_name>/', views.download_braille, name='download_braille'),
     path("view_braille", views.view_braille, name="view_braille"),

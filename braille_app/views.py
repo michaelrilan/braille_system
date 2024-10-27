@@ -314,6 +314,20 @@ def tutorial(request):
 
 
 
+import os
+from django.http import FileResponse
+from django.conf import settings
+
+def download_confirm(request):
+    filename = 'fff.docx'  # Replace with your actual file name
+    file_path = os.path.join(settings.BASE_DIR, 'static', 'documents', filename)
+
+    # Check if file exists
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)
+    else:
+        # Handle case where file does not exist
+        return render(request, 'download_confirm.html')
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
