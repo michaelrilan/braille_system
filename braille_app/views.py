@@ -22,7 +22,7 @@ from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import requests
 import random
-
+from django.utils.timezone import now
 import string
 from pydub import AudioSegment
 import speech_recognition as sr
@@ -215,9 +215,23 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+        
         if user is not None:
-            login(request, user)
-            return redirect('dashboard')
+
+            current_year = now().year
+            threshold_year = current_year - 5
+            UserProfile.objects.filter(
+                school_year__lt=str(threshold_year)
+            ).update(deleteflag=True)
+
+            # Check if the user has a profile and its deleteflag status
+            user_profile = UserProfile.objects.get(user=user)
+            if user_profile.deleteflag:
+                messages.error(request, "Invalid Credentials!")
+                return redirect('login')
+            else:
+                login(request, user)
+                return redirect('dashboard')
         else:
             messages.error(request, "Invalid Credentials!")
     return render(request, 'login.html')
@@ -726,6 +740,18 @@ def archives(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
+def list_of_student(request):
+    students = UserProfile.objects.filter(is_student=True, deleteflag = False).select_related('user').values(
+        'user__first_name', 
+        'user__last_name', 
+        'school_year',
+        'user__username'
+    )
+    return render(request, 'list_of_student.html', {'students': students})
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='login')
 def manage_account(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -737,6 +763,7 @@ def manage_account(request):
                 role = request.POST.get('role')
                 usernames = list(User.objects.values_list('username', flat=True))
                 username = generate_unique_username(fname,lname,usernames)
+                school_year = request.POST.get('school_year')
                 pw = generate_random_string()
                 email_check =  User.objects.filter(email = email).count()
                 if email_check > 0:
@@ -751,7 +778,8 @@ def manage_account(request):
                                 user=user,
                                 initial_password=pw,
                                 is_student=False,
-                                is_faculty = True
+                                is_faculty = True,
+                                school_year = school_year
                             )
                             user_profile.save()
                         elif role == 'student':
@@ -759,11 +787,10 @@ def manage_account(request):
                                 user=user,
                                 initial_password=pw,
                                 is_student=True,
-                                is_faculty = False
+                                is_faculty = False,
+                                school_year = school_year
                             )
                             user_profile.save()
-
-
                         fullname = fname + ' ' + lname
                         context = {
                             'fullname': fullname,

@@ -13,6 +13,7 @@ urlpatterns = [
     path("view_braille", views.view_braille, name="view_braille"),
     path("archives", views.archives, name="archives"),
     path('manage_account',views.manage_account, name='manage_account'),
+    path('list_of_student',views.list_of_student, name='list_of_student'),
     path("shared", views.shared, name="shared"),
     path("shared_braille", views.shared_braille, name="shared_braille"),
 

@@ -5,13 +5,14 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 # Create your models here.
 from django.contrib.auth.models import User
-
+from datetime import datetime
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     initial_password = models.CharField(max_length=255)
     is_faculty = models.BooleanField(verbose_name='is_faculty', default=False)
     is_student = models.BooleanField(verbose_name='is_student', default=False)
+    school_year = models.CharField(verbose_name = 'school_year', default=str(datetime.now().year), max_length = 4)
     deleteflag = models.BooleanField(default=False)
     class Meta:
         db_table = 'UserProfile'

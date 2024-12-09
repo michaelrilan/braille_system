@@ -48,6 +48,16 @@
                                                             <label for="email" class="form-label">Email(Guardian/Parent):</label>
                                                             <input type="email" name="email" value="{{email}}" class="form-control" required>
                                                         </div>
+                                                        <div>
+                                                        <div class="mb-3">
+                                                            <label for="school_year" class="form-label">School Year:</label>
+                                                            <select class="form-select" name="school_year" id = "school_year" required>
+                                                               
+                                                            </select>
+                                                        </div>
+
+                                                        <div>
+                                                            
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="reset" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
@@ -67,30 +77,32 @@
                             <table id="basic-datatables" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>User ID</th>
+                                       
                                         <th>Role</th>   
                                         <th>Firstname</th>
                                         <th>Lastname</th>
                                         <th>Username</th>
                                         <th>Initial Password</th>
+                                        <th>School Year</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>User ID</th>
+                                    
                                         <th>Role</th>
                                         <th>Firstname</th>
                                         <th>Lastname</th>
                                         <th>Username</th>
                                         <th>Initial Password</th>
+                                        <th>School Year</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
                                     {% for profile in profiles %}
                                     <tr>
-                                        <td>{{ profile.user.id }}</td>
+                                        
                                         {%if profile.is_student == True%}
                                             <td>Student</td>
                                         {%elif profile.is_faculty == True%}
@@ -100,6 +112,7 @@
                                         <td>{{ profile.user.last_name }}</td>
                                         <td>{{ profile.user.username }}</td>
                                         <td>{{ profile.initial_password }}</td>
+                                        <td>{{ profile.school_year }}</td>
                                         <td>
                                             {%if profile.is_student == True%}
                                                 <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editaccount{{ profile.user.id }}"><i class="fa fa-edit" aria-hidden="true"></i></button>
@@ -190,5 +203,19 @@
             var regex = /[^a-z ]/gi;
             input.value = input.value.replace(regex, "");
         }
+        document.addEventListener("DOMContentLoaded", function () {
+        const currentYear = 2024; // Set the starting year
+        const yearsBack = 5; // Number of years to go back
+        const select = document.getElementById("school_year");
+
+        // Generate options from currentYear to (currentYear - yearsBack)
+        for (let year = currentYear; year >= currentYear - yearsBack; year--) {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            select.appendChild(option);
+        }
+        });
+
     </script>
 {% endblock %}

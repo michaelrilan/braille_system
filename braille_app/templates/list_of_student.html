@@ -1,0 +1,67 @@
+{% extends "basemain.html" %}
+{% block title %} List of Students -- {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-inner">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">List of Students</div>
+                    </div>
+                    <div class="card-body">
+                        
+                        <div class="table-responsive">
+                            
+                            <table id="basic-datatables" class="display table table-striped table-hover">
+                                <thead>
+                                    <tr> 
+                                        <th>School Year</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Username</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>School Year</th>
+                                        <th>Firstname</th>
+                                        <th>Lastname</th>
+                                        <th>Username</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for student in students %}
+                                    <tr>
+                                        <td>{{student.school_year}}</td>
+                                        <td>{{student.user__first_name}}</td>
+                                        <td>{{student.user__last_name}}</td>
+                                        <td>{{student.user__username}}</td>
+                                        <td>
+                                            <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editaccount{{ profile.user.id }}">Enable</button>
+                                            <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#deleteaccount{{profile.user.id }}" >Disable</button>
+                                        </td>
+
+                                    </tr>
+                                    {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+          // REGEX
+        function lettersOnly(input) {
+            var regex = /[^a-z ]/gi;
+            input.value = input.value.replace(regex, "");
+        }
+        
+
+    </script>
+{% endblock %}

@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import subprocess
 import socket
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-q^9zzj3sd6a1ngl^#r0g^%ugci)uu=6qmb=x=j*xk*@#2ekbew'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', str(ip_address)]
 
@@ -53,7 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'braille_console.urls'
@@ -100,9 +99,9 @@ DATABASES = {
         'PASSWORD':'',
         'HOST': 'localhost',
         'PORT': '3306',
-        # 'OPTIONS': {
-        #     'init_command': "SET sql_mode= 'STRICT_TRANS_TABLES'",
-        # }
+        'OPTIONS': {
+            'init_command': "SET sql_mode= 'STRICT_TRANS_TABLES'",
+        }
     }
 }
 
@@ -138,11 +137,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -154,10 +148,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-from django.utils import timezone
-
-# Use this to set a specific timezone for certain operations in your views
-def set_user_timezone(request):
-    timezone.activate('Asia/Manila')
