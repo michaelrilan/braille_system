@@ -285,8 +285,6 @@ def register(request):
 
 
 
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def dashboard(request):

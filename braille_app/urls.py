@@ -16,7 +16,6 @@ urlpatterns = [
     path('list_of_student',views.list_of_student, name='list_of_student'),
     path("shared", views.shared, name="shared"),
     path("shared_braille", views.shared_braille, name="shared_braille"),
-
     path("account_settings", views.account_settings, name="account_settings"),
     path("logout_user", views.logout_user, name="logout_user"),
     path('grammar_check/',views.grammar_check, name='grammar_check'),
