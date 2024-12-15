@@ -13,6 +13,7 @@ class UserProfile(models.Model):
     is_faculty = models.BooleanField(verbose_name='is_faculty', default=False)
     is_student = models.BooleanField(verbose_name='is_student', default=False)
     school_year = models.CharField(verbose_name = 'school_year', default=str(datetime.now().year), max_length = 4)
+    is_active = models.BooleanField(default=True)
     deleteflag = models.BooleanField(default=False)
     class Meta:
         db_table = 'UserProfile'

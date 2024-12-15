@@ -29,6 +29,8 @@ import speech_recognition as sr
 import socket
 import logging
 import shutil
+from django.core.serializers.json import DjangoJSONEncoder
+from django.utils.safestring import mark_safe
 logger = logging.getLogger(__name__)
 
 def check_internet_connection():
@@ -736,16 +738,86 @@ def archives(request):
 
 
 
+
+@csrf_exempt
+def filter_students_disabled(request):
+    if request.method == 'POST':
+        school_year = request.POST.get('school_year')
+        
+        if school_year == "all" or not school_year:
+            students = UserProfile.objects.filter(
+                is_student=True, 
+                is_active=False
+            ).select_related('user').values(
+                'user__id',
+                'user__first_name',
+                'user__last_name',
+                'school_year',
+                'user__username'
+            )
+        else:
+            students = UserProfile.objects.filter(
+                is_student=True, 
+                is_active=False, 
+                school_year=school_year
+            ).select_related('user').values(
+                'user__id',
+                'user__first_name',
+                'user__last_name',
+                'school_year',
+                'user__username'
+            )
+        return JsonResponse(list(students), safe=False)
+
+@csrf_exempt
+def filter_students_active(request):
+    if request.method == 'POST':
+        school_year = request.POST.get('school_year')
+        
+        if school_year == "all" or not school_year:
+            students = UserProfile.objects.filter(
+                is_student=True, 
+                is_active = True
+            ).select_related('user').values(
+                'user__id',
+                'user__first_name',
+                'user__last_name',
+                'school_year',
+                'user__username'
+            )
+        else:
+            students = UserProfile.objects.filter(
+                is_student=True, 
+                is_active = True,
+                school_year=school_year
+            ).select_related('user').values(
+                'user__id',
+                'user__first_name',
+                'user__last_name',
+                'school_year',
+                'user__username'
+            )
+        return JsonResponse(list(students), safe=False)
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def list_of_student(request):
-    students = UserProfile.objects.filter(is_student=True, deleteflag = False).select_related('user').values(
+    students_active = UserProfile.objects.filter(is_student=True, is_active = True).select_related('user').values(
+        'user__id',
         'user__first_name', 
         'user__last_name', 
         'school_year',
         'user__username'
     )
-    return render(request, 'list_of_student.html', {'students': students})
+    students_disabled = UserProfile.objects.filter(is_student=True, is_active = False).select_related('user').values(
+        'user__id',
+        'user__first_name', 
+        'user__last_name', 
+        'school_year',
+        'user__username'
+    )
+    return render(request, 'list_of_student.html', {'students_active': students_active, 'students_disaled': students_disabled})
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

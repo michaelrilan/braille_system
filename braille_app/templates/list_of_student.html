@@ -10,7 +10,21 @@
                         List of Students
                     </h4>
                 </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="school_year" class="form-label">School Year:</label>
+                            <select class="form-select" name="school_year" id = "school_year" required>
+                                <option value="all" selected>All</option>
+                            </select>
+                            <div id="loading" style="display: none;">
+                                Loading...
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
+                    
                     <div class="card-header">
                         <div class="card-title">Active Accounts</div>
                     </div>
@@ -18,7 +32,7 @@
                         
                         <div class="table-responsive">
                             
-                            <table id="basic-datatables" class="display table table-striped table-hover">
+                            <table id="active-datatables" class="display table table-striped table-hover basic-datatables-act">
                                 <thead>
                                     <tr> 
                                         <th>School Year</th>
@@ -38,16 +52,45 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    {% for student in students %}
+                                    {% for student in students_active %}
                                     <tr>
                                         <td>{{student.school_year}}</td>
                                         <td>{{student.user__first_name}}</td>
                                         <td>{{student.user__last_name}}</td>
                                         <td>{{student.user__username}}</td>
                                         <td>
-                                            <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#disableaccount{{profile.user.id }}" >Disable</button>
-                                        </td>
+                                            <button class="btn btn-round btn-sm btn-danger"data-bs-toggle="modal" data-bs-target="#disableaccount{{student.user__id}}" >Disable</button>
+                                            <!-- Disable Modal -->
+                                            <div class="modal fade " id="disableaccount{{student.user__id}}" tabindex="-1" aria-labelledby="exampleModalLabel{{student.user__id}}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Disable Account {{student.user__username}}?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    The Select Account will never be receiving any upcoming shared brailes.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form method="post" name="Disable_Account"> 
+                                                                {%csrf_token%}
+                                                                <input type="hidden" name="account_id" value="{{student.user__id}}">
+                                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                            </form>
+                                                            
+                                                        </div>
+                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td> 
                                     </tr>
+                                    
                                     {%endfor%}
                                 </tbody>
                             </table>
@@ -58,12 +101,14 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Disabled Accounts</div>
+                        <div class="mb-3">
+                        </div>
                     </div>
                     <div class="card-body">
                         
                         <div class="table-responsive">
                             
-                            <table id="basic-datatables" class="display table table-striped table-hover">
+                            <table id="disabled-datatables" class="display table table-striped table-hover basic-datatables-dis">
                                 <thead>
                                     <tr> 
                                         <th>School Year</th>
@@ -83,14 +128,42 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    {% for student in students %}
+                                    {% for student_dis in students_disaled %}
                                     <tr>
-                                        <td>{{student.school_year}}</td>
-                                        <td>{{student.user__first_name}}</td>
-                                        <td>{{student.user__last_name}}</td>
-                                        <td>{{student.user__username}}</td>
+                                        <td>{{student_dis.school_year}}</td>
+                                        <td>{{student_dis.user__first_name}}</td>
+                                        <td>{{student_dis.user__last_name}}</td>
+                                        <td>{{student_dis.user__username}}</td>
                                         <td>
-                                            <button class="btn btn-round btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#enableaccount{{ profile.user.id }}">Enable</button>
+                                            <button class="btn btn-round btn-sm btn-primary"data-bs-toggle="modal" data-bs-target="#enableaccount{{student.user__id}}" >Enable</button>
+                                            <!-- Enable Modal -->
+                                            <div class="modal fade " id="enableaccount{{student.user__id}}" tabindex="-1" aria-labelledby="exampleModalLabel{{student.user__id}}" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-scrollable">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Enable Account {{student.user__username}}?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    The Select Account will now be receiving shared brailles.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form method="post" name="Enable_Account"> 
+                                                                {%csrf_token%}
+                                                                <input type="hidden" name="account_id" value="{{student.user__id}}">
+                                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                            </form>
+                                                            
+                                                        </div>
+                                        
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
 
                                     </tr>
@@ -104,13 +177,219 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            $('#active-datatables').DataTable({
+                "searching": true, // Enable search bar
+                "paging": true,    // Enable pagination
+                "info": true       // Show table info
+            });
+    
+            $('#disabled-datatables').DataTable({
+                "searching": true, // Enable search bar
+                "paging": true,    // Enable pagination
+                "info": true       // Show table info
+            });
+        });
+    </script>
     <script>
           // REGEX
         function lettersOnly(input) {
             var regex = /[^a-z ]/gi;
             input.value = input.value.replace(regex, "");
         }
-        
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentYear = 2024; // Set the starting year
+            const yearsBack = 5; // Number of years to go back
+            const select = document.getElementById("school_year");
+            const tableBodyAct = document.querySelector(".basic-datatables-act tbody"); // Active table body
+            const tableBodyDis = document.querySelector(".basic-datatables-dis tbody"); // Disabled table body
+            const loadingMessage = document.getElementById("loading"); // Get the loading element
+            const originalDataAct = [...tableBodyAct.rows].map(row => row.innerHTML); // Save original active table rows
+            const originalDataDis = [...tableBodyDis.rows].map(row => row.innerHTML); // Save original disabled table rows
+        
+            // Generate options from currentYear to (currentYear - yearsBack)
+            for (let year = currentYear; year >= currentYear - yearsBack; year--) {
+                const option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+                select.appendChild(option);
+            }
+        
+            // Get CSRF token from cookie
+            function getCookie(name) {
+                const cookieValue = document.cookie
+                    .split("; ")
+                    .find(row => row.startsWith(name + "="));
+                return cookieValue ? decodeURIComponent(cookieValue.split("=")[1]) : null;
+            }
+            const csrfToken = getCookie("csrftoken");
+        
+            // Add event listener for select change
+            select.addEventListener("change", function () {
+                const schoolYear = select.value;
+        
+                // Show "Loading..." and disable the select
+                loadingMessage.style.display = "block"; // Show the loading message
+                select.disabled = true; // Disable the select dropdown
+        
+                if (schoolYear === "all") {
+                    // Reset both tables to original data
+                    tableBodyAct.innerHTML = "";
+                    tableBodyDis.innerHTML = "";
+                    originalDataAct.forEach(rowHTML => {
+                        tableBodyAct.insertAdjacentHTML("beforeend", `<tr>${rowHTML}</tr>`);
+                    });
+                    originalDataDis.forEach(rowHTML => {
+                        tableBodyDis.insertAdjacentHTML("beforeend", `<tr>${rowHTML}</tr>`);
+                    });
+        
+                    // Hide the loading message and enable the select again
+                    loadingMessage.style.display = "none";
+                    select.disabled = false;
+                    return;
+                }
+        
+                // Otherwise, send AJAX requests to filter active and disabled students
+                const formData = new FormData();
+                formData.append('school_year', schoolYear);
+        
+                // Request active students
+                fetch('/filter_students_active/', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin', // Ensure the session is maintained
+                    headers: { 'X-CSRFToken': csrfToken } // Include CSRF token
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to fetch active students");
+                    return response.json();
+                })
+                .then(data => {
+                    // Clear the existing rows in the active table
+                    tableBodyAct.innerHTML = "";
+        
+                    // Populate the active table with the new data
+                    if (data.length === 0) {
+                        const emptyRow = `
+                            <tr>
+                                <td colspan="5" class="text-center">No active students found</td>
+                            </tr>`;
+                        tableBodyAct.insertAdjacentHTML("beforeend", emptyRow);
+                    } else {
+                        data.forEach(student => {
+                            const row = `
+                                <tr>
+                                    <td>${student.school_year}</td>
+                                    <td>${student.user__first_name}</td>
+                                    <td>${student.user__last_name}</td>
+                                    <td>${student.user__username}</td>
+                                    <td>
+                                        <button class="btn btn-round btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#disableaccount${student.user__id}">
+                                            Disable
+                                        </button>
+                                        <!-- Disable Modal -->
+                                        <div class="modal fade" id="disableaccount${student.user__id}" tabindex="-1" aria-labelledby="disableLabel${student.user__id}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="disableLabel${student.user__id}">Disable Account ${student.user__username}?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        The selected account will no longer receive upcoming shared brailles.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post">
+                                                            <input type="hidden" name="account_id" value="${student.user__id}">
+                                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                            tableBodyAct.insertAdjacentHTML("beforeend", row);
+                        });
+                        
+                    }
+                })
+                .catch(error => console.error("Error fetching active students:", error));
+        
+                // Request disabled students
+                fetch('/filter_students_disabled/', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'same-origin', // Ensure the session is maintained
+                    headers: { 'X-CSRFToken': csrfToken } // Include CSRF token
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Failed to fetch disabled students");
+                    return response.json();
+                })
+                .then(data => {
+                    // Clear the existing rows in the disabled table
+                    tableBodyDis.innerHTML = "";
+        
+                    // Populate the disabled table with the new data
+                    if (data.length === 0) {
+                        const emptyRow = `
+                            <tr>
+                                <td colspan="5" class="text-center">No Inactive students found</td>
+                            </tr>`;
+                        tableBodyDis.insertAdjacentHTML("beforeend", emptyRow);
+                    } else {
+                        data.forEach(student => {
+                            const row = `
+                                <tr>
+                                    <td>${student.school_year}</td>
+                                    <td>${student.user__first_name}</td>
+                                    <td>${student.user__last_name}</td>
+                                    <td>${student.user__username}</td>
+                                    <td>
+                                        <button class="btn btn-round btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#enableaccount${student.user__id}">
+                                            Enable
+                                        </button>
+                                        <!-- Enable Modal -->
+                                        <div class="modal fade" id="enableaccount${student.user__id}" tabindex="-1" aria-labelledby="enableLabel${student.user__id}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="enableLabel${student.user__id}">Enable Account ${student.user__username}?</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        The selected account will now receive shared brailles.
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post">
+                                                            <input type="hidden" name="account_id" value="${student.user__id}">
+                                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                            tableBodyDis.insertAdjacentHTML("beforeend", row);
+                        });
+                        
+                    }
+                })
+                .catch(error => console.error("Error fetching disabled students:", error))
+                .finally(() => {
+                    // Hide the loading message and enable the select again after both requests are finished
+                    loadingMessage.style.display = "none";
+                    select.disabled = false;
+                });
+            });
+        });
+        
     </script>
 {% endblock %}
