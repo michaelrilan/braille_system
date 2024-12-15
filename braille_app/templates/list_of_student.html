@@ -79,7 +79,7 @@
                                                             <form method="post" name="Disable_Account"> 
                                                                 {%csrf_token%}
                                                                 <input type="hidden" name="account_id" value="{{student.user__id}}">
-                                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                                                <button type="submit" name="form_type" value="disable_account" class="btn btn-primary">Yes</button>
                                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
                                                             </form>
                                                             
@@ -154,8 +154,8 @@
                                                         <div class="modal-footer">
                                                             <form method="post" name="Enable_Account"> 
                                                                 {%csrf_token%}
-                                                                <input type="hidden" name="account_id" value="{{student.user__id}}">
-                                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                                                <input type="hidden" name="account_id" value="{{student_dis.user__id}}">
+                                                                <button type="submit" name="form_type" value="enable_account" class="btn btn-primary">Yes</button>
                                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
                                                             </form>
                                                             
@@ -303,8 +303,9 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form method="post">
+                                                            {%csrf_token%}
                                                             <input type="hidden" name="account_id" value="${student.user__id}">
-                                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                                            <button type="submit" name="form_type" value="disable_account" class="btn btn-primary">Yes</button>
                                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
                                                         </form>
                                                     </div>
@@ -367,8 +368,9 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <form method="post">
+                                                            {%csrf_token%}
                                                             <input type="hidden" name="account_id" value="${student.user__id}">
-                                                            <button type="submit" class="btn btn-primary">Yes</button>
+                                                            <button type="submit" name="form_type" value="enable_account" class="btn btn-primary">Yes</button>
                                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
                                                         </form>
                                                     </div>

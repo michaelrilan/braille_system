@@ -803,6 +803,31 @@ def filter_students_active(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def list_of_student(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form_type = request.POST.get('form_type')
+            if form_type == 'disable_account':
+               
+                account_id = request.POST.get('account_id')
+                print(account_id)
+                user = User.objects.get(id=account_id)
+                user_profile = UserProfile.objects.get(user = user)
+                user_profile.is_active = False
+                user_profile.save()
+                messages.success(request, 'Account Disabled Successfully')
+
+                return redirect('list_of_student')
+            elif form_type == 'enable_account':
+                
+                account_id = request.POST.get('account_id')
+                print(account_id)
+
+                user = User.objects.get(id=account_id)
+                user_profile = UserProfile.objects.get(user = user)
+                user_profile.is_active = True
+                user_profile.save()
+                messages.success(request, 'Account Enabled Successfully')
+                return redirect('list_of_student')
     students_active = UserProfile.objects.filter(is_student=True, is_active = True).select_related('user').values(
         'user__id',
         'user__first_name', 
@@ -817,6 +842,7 @@ def list_of_student(request):
         'school_year',
         'user__username'
     )
+    
     return render(request, 'list_of_student.html', {'students_active': students_active, 'students_disaled': students_disabled})
 
 
