@@ -179,29 +179,14 @@
                                                             <form method="post" name="share_braille">
                                                                 {% csrf_token %}
                                                                 <div class="modal-body">
-                                                                    <input type="text" name="braille_id" value="{{ bf.id }}" style="display: none;">
-                                                                    
-                                                                    <label for="UsernameOptions{{ bf.id }}">Type the username and click Add:</label>
-                                                                    
-                                                                    <div class="mb-3">
-                                                                        <input type="text" class="form-control" list="UsernameOptions{{ bf.id }}" id="UsernameInput{{ bf.id }}">
-                                                                        <datalist id="UsernameOptions{{ bf.id }}">
-                                                                            {% for profile in usernames %}
-                                                                                <option value="{{ profile.user.username }}">
-                                                                            {% endfor %}
-                                                                        </datalist>
-                                                                        <div class="mt-1">
-                                                                            <button type="button" id="addButton{{ bf.id }}" class="btn-round btn-sm"> 
-                                                                                <i class="fa fa-plus" aria-hidden="true"></i>Add
-                                                                            </button>
-                                                                        </div>
-                                                                        
-                                                                    </div>
-
-                                                                    <div class="mb-3">
-                                                                        <label for="UsernameList{{ bf.id }}">List of Usernames:</label>
-                                                                        <input type="text" name="usernames" class="form-control" id="UsernameList{{ bf.id }}" value="">
-                                                                    </div>
+                                                                    <label for="school_year" class="form-label">School Year:</label>
+                                                                    <select class="form-select" name="school_year" id = "school_year" required>
+                                                                        <option value="" disabled selected>Select a year</option>
+                                                                        {% for year in school_years %}
+                                                                       
+                                                                            <option value="{{ year }}">{{ year }}</option>
+                                                                        {% endfor %}
+                                                                    </select>      
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
@@ -224,7 +209,7 @@
                     </div>
                 </div>
             </div>
-            <script>
+            <!-- <script>
                 document.querySelectorAll('[id^="addButton"]').forEach(function(addButton) {
                 const bfId = addButton.id.replace('addButton', ''); // Extract the id from the button's id
                 const UsernameInput = document.getElementById('UsernameInput' + bfId);
@@ -265,7 +250,7 @@
                 });
             });
 
-            </script>
+            </script> -->
   
   
             {% endblock %}

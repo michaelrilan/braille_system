@@ -441,6 +441,11 @@ def view_braille(request):
     current_date = datetime.now().strftime('%Y%m%d_%H%M%S')  # Format the date as YYYYMMDD
     
     if request.user.is_authenticated:
+        unique_school_years = UserProfile.objects.filter(
+        is_active=True
+        ).values_list('school_year', flat=True).distinct()
+        
+        print(unique_school_years)
         user_id = request.user.id
         user_profile = get_object_or_404(UserProfile, user_id=user_id)
         if request.method == 'POST':
@@ -678,7 +683,8 @@ def view_braille(request):
 
         context = {'braille_infos': braille_infos,
                    'usernames': usernames,
-                   'is_faculty': user_profile.is_faculty
+                   'is_faculty': user_profile.is_faculty,
+                   'school_years': unique_school_years
                    }
     else: 
         return redirect('login')
