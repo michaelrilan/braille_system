@@ -179,6 +179,7 @@
                                                             <form method="post" name="share_braille">
                                                                 {% csrf_token %}
                                                                 <div class="modal-body">
+                                                                    <input type="text" name="braille_id" id="" value="{{ bf.id }}" style="display: none;">
                                                                     <label for="school_year" class="form-label">School Year:</label>
                                                                     <select class="form-select" name="school_year" id = "school_year" required>
                                                                         <option value="" disabled selected>Select a year</option>

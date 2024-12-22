@@ -1,0 +1,65 @@
+{% extends "basemain.html" %}
+{% block title %} Shared Braille Information {% endblock %}
+
+{% block content %}
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title"> List of Shared File Students</div>
+                            </div>
+                            
+                            <div class="card-body">
+                                
+                                <div class="table-responsive">
+                                    <table id="basic-datatables" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>FullName</th>
+                                                <th>School Year</th>
+                                                <th>Status</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>FullName</th>
+                                                <th>School Year</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {%for s in shared%}
+                                            <tr>
+                                                
+                                                <td>{{s.shared_to_user.username}}</td>
+                                                <td>{{s.shared_to_user.first_name}} {{s.shared_to_user.last_name}} </td>
+                                                <td>
+                                                    {% for profile in s.shared_to_user.userprofile_set.all %}
+                                                    {{ profile.school_year }}
+                                                    {% endfor %}
+                                            </td>
+                                                <td>
+                                                    {%if s.is_viewed%}
+                                                        <p class="text-success"> Viewed</p>
+                                                    {%else%}
+                                                    <p class="text-danger"> Not Yet Viewed</p>
+                                                    {%endif%}
+                                                </td>
+                                            </tr>
+                                            {%endfor%}
+                                           
+                                        </tbody>
+                                    </table>
+                                <a href="{%url 'dashboard'%}" type="button" class="btn btn-danger  btn-round btn-md ">Back</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}

@@ -31,6 +31,7 @@ import logging
 import shutil
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.safestring import mark_safe
+from django.db.models import Prefetch
 logger = logging.getLogger(__name__)
 
 def check_internet_connection():
@@ -165,10 +166,8 @@ def convert_to_braille(text):
 
 
 
-
 def uppercase(data):
     return str(data).upper()
-
 
 
 def check_text(text):
@@ -205,8 +204,6 @@ def grammar_check(request):
         
         return JsonResponse({'corrected_text': result.text})
     return JsonResponse({'error': 'Invalid request method'}, status=405)
-
-
 
 
 
@@ -295,21 +292,56 @@ def dashboard(request):
         braille_infos_count = BrailleInfo.objects.filter(user_id=user_id).count()
         shared_to_me = SharedBraille.objects.filter(shared_to_user = user_id).count()
         archives = BrailleInfo.objects.filter(user_id = user_id,deleteflag=True).count()
-        activity_history = ActivityHistory.objects.filter(user_id=user_id).order_by('-date_log')
         shared_braille_entries = SharedBraille.objects.select_related('user', 'shared_to_user', 'braille_info').filter(user_id=user_id).count()
 
-        print(archives)
+        # admin_dashboard_tbl = SharedBraille.objects.filter(user_id=user_id).select_related(
+        # 'braille_info', 'shared_to_user'
+        # ).distinct('braille_info')
+        all_shared_entries = SharedBraille.objects.filter(user_id=user_id).select_related('braille_info', 'shared_to_user')
+
+        # Filter to retain only distinct braille_info_id entries
+        seen_braille_ids = set()
+        distinct_shared_entries = []
+        for entry in all_shared_entries:
+            if entry.braille_info_id not in seen_braille_ids:
+                seen_braille_ids.add(entry.braille_info_id)
+                distinct_shared_entries.append(entry)
+                
         context = {
+            'admin_dashboard_tbl': distinct_shared_entries,
             'archives_count' : archives,
             'braille_infos_count': braille_infos_count,
             'shared_to_me_count': shared_to_me,
             'shared_braille_entries': shared_braille_entries,
-            'activity_history':activity_history
         }
     return render(request, 'dashboard.html',context)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='login')
+def notif_braille(request):
+    return render(request,'notif_braille.html')
 
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@login_required(login_url='login')
+def notif_braille_admin(request, braille_id):
+    user_id = request.user.id
+    # shared = SharedBraille.objects.filter(braille_info = braille_id,user = user_id).all()
+    shared = SharedBraille.objects.filter(
+    braille_info=braille_id, user=user_id
+    ).select_related('shared_to_user').prefetch_related(
+        Prefetch(
+            'shared_to_user__userprofile_set',
+            queryset=UserProfile.objects.all()
+        )
+    )
+    
+    context = {
+        "shared": shared
+    }
+    return render(request,'notif_braille_admin.html',context)
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -432,9 +464,6 @@ def create_braille(request):
 
 
 
-
-
-
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def view_braille(request):
@@ -442,7 +471,9 @@ def view_braille(request):
     
     if request.user.is_authenticated:
         unique_school_years = UserProfile.objects.filter(
-        is_active=True
+        is_active=True,
+        is_student = True,
+        deleteflag = False
         ).values_list('school_year', flat=True).distinct()
         
         print(unique_school_years)
@@ -631,48 +662,38 @@ def view_braille(request):
 
             elif form_type == 'share_braille':
                 braille_id = request.POST.get('braille_id')
-                username_list = request.POST.get('usernames')
-                if username_list == '':
-                    messages.error(request, 'Please Add at least 1 username')
-                    return redirect('view_braille')
+                school_year = request.POST.get('school_year')
+                print(school_year)
+                user_ids = UserProfile.objects.filter(
+                deleteflag=False,
+                is_active=True,
+                is_student = True,
+                school_year = school_year
+                ).values_list('user_id', flat=True)
 
-                else:
-                    # Split by semicolon
-                    split_list = username_list.split(';')
+                user_ids_list = list(user_ids)
+                any_new_entry_created = False
+                braille_info = BrailleInfo.objects.get(id=braille_id)
+                for shared_to_user_id in user_ids_list:
+                    shared_to_user = User.objects.get(id=shared_to_user_id)
+                    exists = SharedBraille.objects.filter(
+                    braille_info=braille_info,
+                    shared_to_user=shared_to_user,
+                    user_id=user_id
+                    ).exists()
 
-                    # Strip whitespaces and filter out empty strings
-                    split_list = [item.strip() for item in split_list if item.strip()]
+                    if not exists:
+                        SharedBraille.objects.create(
+                            user_id=user_id,
+                            shared_to_user=shared_to_user,
+                            braille_info=braille_info
+                        )
+                        messages.success(request, 'Braille File Successfully Shared.')
+                        any_new_entry_created = True
 
-                    user_ids = []
-
-                    for username in split_list:
-                        try:
-                            # Fetch the user based on the username (use 'username__iexact' for case-insensitive match)
-                            user = User.objects.get(username=username)
-                            user_ids.append(user.id)  # Add the user's ID to the list
-                        except User.DoesNotExist:
-                            print(f"User '{username}' does not exist.")
-                            user_ids.append(None)  # Append None if the user doesn't exist
-
-                    for uid in user_ids:
-                        if uid is None:
-                            continue  # Skip users that don't exist
-
-                        # Check if the record already exists in SharedBraille
-                        if not SharedBraille.objects.filter(braille_info_id=braille_id, shared_to_user_id=uid).exists():
-                            # Create and save the new entry in the database
-                            new_shared_braille = SharedBraille(
-                                braille_info_id=braille_id,
-                                shared_to_user_id=uid,
-                                user_id=request.user.id  # Assuming the current user is the one sharing the file
-                            )
-                            new_shared_braille.save()
-
-                            activity_history = ActivityHistory(user_id = user_id,activity_log="Shared Braille File(File # " +str(braille_id) + ")")
-                            activity_history.save()
-
-                    messages.success(request, 'Braille File Successfully Shared.')
-                    return redirect('view_braille')
+                if not any_new_entry_created:
+                    messages.info(request, 'All Students in school year ' + str(school_year) + ' has been shared already with this file')
+                return redirect('view_braille')
                 
         braille_infos = BrailleInfo.objects.filter(user_id=user_id,deleteflag = False)
 
@@ -813,7 +834,6 @@ def list_of_student(request):
         if request.method == 'POST':
             form_type = request.POST.get('form_type')
             if form_type == 'disable_account':
-               
                 account_id = request.POST.get('account_id')
                 print(account_id)
                 user = User.objects.get(id=account_id)
@@ -834,14 +854,14 @@ def list_of_student(request):
                 user_profile.save()
                 messages.success(request, 'Account Enabled Successfully')
                 return redirect('list_of_student')
-    students_active = UserProfile.objects.filter(is_student=True, is_active = True).select_related('user').values(
+    students_active = UserProfile.objects.filter(is_student=True, is_active = True,deleteflag = False).select_related('user').values(
         'user__id',
         'user__first_name', 
         'user__last_name', 
         'school_year',
         'user__username'
     )
-    students_disabled = UserProfile.objects.filter(is_student=True, is_active = False).select_related('user').values(
+    students_disabled = UserProfile.objects.filter(is_student=True, is_active = False,deleteflag = False).select_related('user').values(
         'user__id',
         'user__first_name', 
         'user__last_name', 
