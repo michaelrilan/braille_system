@@ -103,7 +103,7 @@
                                                     <th scope="col">Braille Title</th>
                                                     <th scope="col">Date Shared</th>
                                                     <th scope="col">View Info</th>
-                                                    
+                                        
                                                 </tr>
                                             </thead>
                                             <tfoot>
@@ -118,26 +118,27 @@
                                                 {%for ad in admin_dashboard_tbl %}
                                                 <tr>
                                                     <td>
-                                                       {{ad.id}}
+                                                        {{ad.id}}
                                                     </td>
                                                     <td>
                                                         {{ ad.braille_info.title }}
-
+                                        
                                                     </td>
                                                     <td>
-                                                        
-                                                        
+                                        
+                                        
                                                         {{ ad.date_shared}}
                                                     </td>
                                                     <td>
-                                                        <a href="{%url 'notif_braille_admin' ad.braille_info_id %}" type="button" class="btn btn-round btn-sm btn-secondary">
+                                                        <a href="{%url 'notif_braille_admin' ad.braille_info_id %}" type="button"
+                                                            class="btn btn-round btn-sm btn-secondary">
                                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                                         </a>
                                                     </td>
                                                 </tr>
                                                 {%endfor%}
-                                                
-                                                
+                                        
+                                        
                                             </tbody>
                                         </table>
                                     </div>
@@ -157,40 +158,47 @@
                                     </div>
                                     <div class="card-body pt-2">
                                         <div class="table-responsive">
-                                            <!-- class="table align-items-center mb-0" -->
-                                            
-                                            <table id="basic-datatables" class="display table table-striped table-hover">
+                                            <table id="main_datatable" class="display table table-striped table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Activity Log</th>
-                                                        <th scope="col" class="text-end">Date</th>
+                                                        <th scope="col">Shared ID</th>
+                                                        <th scope="col">Shared By</th>
+                                                        <th scope="col">Date Shared</th>
+                                                        <th scope="col">View Info</th>
+                                            
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
                                                     <tr>
-                                                        <th scope="col">#</th>
-                                                        <th scope="col">Activity Log</th>
-                                                        <th scope="col" class="text-end">Date</th>
+                                                        <th scope="col">Shared ID</th>
+                                                        <th scope="col">Shared By</th>
+                                                        <th scope="col">Date Shared</th>
+                                                        <th scope="col">View Info</th>
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
-                                                    {%for ah in activity_history%}
+                                                    {%for sd in student_dashboard_tbl %}
                                                     <tr>
-                                                        <td class="text-end">
-                                                            {{ah.id}}
+                                                        <td>
+                                                            {{sd.id}}
                                                         </td>
-                                                        <th scope="row">
-                                                            <i class="btn btn-icon btn-round btn-info btn-sm me-2">
-                                                                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                                            </i>{{ah.activity_log}}
-                                                        </th>
-                                                        <td class="text-end">
-                                                            {{ah.date_log}}
+                                                        <td>
+                                                            {{ sd.user.first_name }} {{ sd.user.last_name }} 
+                                            
+                                                        </td>
+                                                        <td>
+                                                            {{ sd.date_shared}}
+                                                        </td>
+                                                        <td>
+                                                            <a href="{%url 'notif_braille' sd.id %}" type="button"
+                                                                class="btn btn-round btn-sm btn-secondary">
+                                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                     {%endfor%}
-                                                    
+                                            
+                                            
                                                 </tbody>
                                             </table>
                                         </div>

@@ -294,11 +294,7 @@ def dashboard(request):
         archives = BrailleInfo.objects.filter(user_id = user_id,deleteflag=True).count()
         shared_braille_entries = SharedBraille.objects.select_related('user', 'shared_to_user', 'braille_info').filter(user_id=user_id).count()
 
-        # admin_dashboard_tbl = SharedBraille.objects.filter(user_id=user_id).select_related(
-        # 'braille_info', 'shared_to_user'
-        # ).distinct('braille_info')
         all_shared_entries = SharedBraille.objects.filter(user_id=user_id).select_related('braille_info', 'shared_to_user')
-
         # Filter to retain only distinct braille_info_id entries
         seen_braille_ids = set()
         distinct_shared_entries = []
@@ -306,8 +302,11 @@ def dashboard(request):
             if entry.braille_info_id not in seen_braille_ids:
                 seen_braille_ids.add(entry.braille_info_id)
                 distinct_shared_entries.append(entry)
+
+        student_dashboard_tbl = SharedBraille.objects.filter(shared_to_user = user_id, is_viewed = False).all()
                 
         context = {
+            'student_dashboard_tbl': student_dashboard_tbl,
             'admin_dashboard_tbl': distinct_shared_entries,
             'archives_count' : archives,
             'braille_infos_count': braille_infos_count,
@@ -319,8 +318,89 @@ def dashboard(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
-def notif_braille(request):
-    return render(request,'notif_braille.html')
+def notif_braille(request,shared_id):
+    shared_braille = get_object_or_404(SharedBraille, id=shared_id)
+    shared_braille.is_viewed = True
+    shared_braille.save()
+    if request.method == 'POST':
+            braille_id = request.POST.get('braille_id')
+            filename = request.POST.get('filename')
+            documents_dir = 'static/documents'
+            
+            fetch_braille = BrailleInfo.objects.get(id=braille_id, deleteflag=False)
+            title = fetch_braille.title
+            braille_text = fetch_braille.braille_text
+            braille_draft = fetch_braille.braille_draft
+
+            # Create the documents directory if it doesn't exist
+            if not os.path.exists(documents_dir):
+                os.makedirs(documents_dir)
+
+            file_path = os.path.join(documents_dir, filename)
+
+            # Check if the file exists, if not, recreate it
+            if not os.path.exists(file_path):
+                try:
+                    # Create and save the document
+                    # document = Document()
+                    # document.add_heading(title, level=1)
+                    # document.add_paragraph(braille_text)
+                    # document.add_paragraph(braille_draft)
+                    # document.save(file_path)
+
+                    # Create a new document
+                    document = Document()
+
+                    # Add title with font size 15 and center alignment
+                    title_paragraph = document.add_heading(title, level=1)
+                    title_run = title_paragraph.runs[0]
+                    title_run.font.size = Pt(15)
+                    title_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Centers the title
+
+                    # Add space below the title (1 line break)
+                    for _ in range(1):
+                        document.add_paragraph()  # Add empty paragraphs for spacing
+
+                    # Modify 'braille_text' to add 3 spaces between each character
+                    braille_text_spaced = '   '.join(braille_text)  # Adds 3 spaces between each character
+
+                    # Add braille_text with font size 22
+                    para_braille = document.add_paragraph()
+                    run_braille = para_braille.add_run(braille_text_spaced)
+                    font_braille = run_braille.font
+                    font_braille.size = Pt(22)
+
+                    # Add braille_draft with font size 22
+                    para_draft = document.add_paragraph()
+                    run_draft = para_draft.add_run(braille_draft)
+                    font_draft = run_draft.font
+                    font_draft.size = Pt(22)
+
+                    # Define the file path and save the document
+                    file_path = os.path.join(documents_dir, filename)
+                    document.save(file_path)
+                except Exception as e:
+                    print(f"Error creating document: {e}")
+
+            try:
+                # Determine the user's Downloads directory
+                downloads_dir = os.path.join(os.path.expanduser("~"), "Downloads")
+                destination_path = os.path.join(downloads_dir, filename)
+
+                # Copy the file to the Downloads directory
+                shutil.copy(file_path, destination_path)
+                print(f"File copied to: {destination_path}")
+                messages.success(request,"File Downloaded Successfully")
+                # Optionally, you can also return a success message or redirect
+                return redirect('notif_braile')  # Adjust this to your success view
+            except Exception as e:
+                print(f"Error during file copy: {e}")
+    braille_infos =  SharedBraille.objects.filter(id=shared_id).all()
+    
+    context = {
+        'braille_infos':braille_infos,
+    }
+    return render(request,'notif_braille.html',context)
 
 
 
@@ -337,7 +417,7 @@ def notif_braille_admin(request, braille_id):
             queryset=UserProfile.objects.all()
         )
     )
-    
+
     context = {
         "shared": shared
     }
