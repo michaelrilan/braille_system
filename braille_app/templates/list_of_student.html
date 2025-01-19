@@ -201,7 +201,8 @@
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            const currentYear = 2024; // Set the starting year
+            var currentTime = new Date()
+            const currentYear = currentTime.getFullYear(); // Set the starting year
             const yearsBack = 5; // Number of years to go back
             const select = document.getElementById("school_year");
             const tableBodyAct = document.querySelector(".basic-datatables-act tbody"); // Active table body
